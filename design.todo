@@ -1,0 +1,7 @@
+GamesActions
+  - createGame
+  - editGame
+
+GameStore
+  - listens to GamesActions
+  - has _games
