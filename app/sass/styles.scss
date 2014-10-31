@@ -18,6 +18,10 @@ body {
   background: rgba(255, 255, 255, .75);
   width: 100%;
   min-height: 100%;
+
+  h2 {
+    margin: 40px 0;
+  }
 }
 
 .game-arena .btn {
