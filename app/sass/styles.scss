@@ -1,0 +1,26 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: url(/img/glass-of-clear-liquid.jpg) no-repeat center center fixed; 
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.game-container {
+  text-align: center;
+  background: rgba(255, 255, 255, .75);
+  width: 100%;
+  min-height: 100%;
+}
+
+.game-arena .btn {
+  width: 100px;
+  margin-right: 10px;
+}
