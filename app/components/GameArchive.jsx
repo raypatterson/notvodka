@@ -34,7 +34,7 @@ var GameArchive = React.createClass({
 
       return (
         <div className="row">
-          <div className={"col-md-4"}>
+          <div className={"col-md-12"}>
             <h2 className="h3">Game Archive</h2>
             {gameElements}
           </div>

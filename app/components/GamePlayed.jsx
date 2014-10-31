@@ -24,7 +24,7 @@ var GamePlayed = React.createClass({
 
       return (
         <div className="row">
-          <div className={"col-md-4"}>
+          <div className={"col-md-12"}>
             <h2 className="h3">Game Results</h2>
             <GameResult key={this.state.activeGame._id} game={this.state.activeGame} />
           </div>

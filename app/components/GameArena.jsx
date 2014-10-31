@@ -28,7 +28,10 @@ var GameArena = React.createClass({
 
   render: function() {
 
-    if (this.state.isGameActive) {
+    if (this.state.isGamePlayed) {
+
+      return null;
+    } else {
 
       var self = this;
 
@@ -41,14 +44,11 @@ var GameArena = React.createClass({
       return (
 
         <div className="row">
-          <div className={"game-arena col-md-4"}>
+          <div className={"game-arena col-md-12"}>
             <div>{moveButtonElements}</div>
           </div>
         </div>
       )
-    } else {
-
-      return null;
     }
   }
 });

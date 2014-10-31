@@ -28,24 +28,24 @@ var GameStart = React.createClass({
 
   render: function() {
 
-    if (this.state.isGameActive) {
-
-      return null;
-    } else {
+    if (this.state.isGamePlayed) {
 
       return (
 
         <div className="row">
-          <div className={"col-md-4"}>
+          <div className={"col-md-12"}>
             <button
               type="button" 
-              className={"btn btn-lg btn-default " + (this.state.isGameActive ? "disabled" : "")} 
+              className="btn btn-lg btn-default" 
               onClick={this.onClick}>
               Start a new game
             </button>
           </div>
         </div>
       )
+    } else {
+
+      return null;
     }
   }
 });

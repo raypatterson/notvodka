@@ -33,14 +33,14 @@ var _getMoveFromId = function(id) {
   });
 };
 
-var _getIsGameWonByGuessing = function(playerMove) {
+var _getIsWonByGuessing = function(playerMove, correctMove) {
 
-  return playerMove._id === _state.activeGame.correctMove._id ? true : false;
+  return playerMove._id === correctMove._id ? true : false;
 };
 
-var _getIsGameWonByDisagreeing = function(playerMove) {
+var _getIsWonByDisagreeing = function(playerMove, opponentMoves) {
 
-  return !_.contains(_state.activeGame.opponentMoves, playerMove);
+  return !_.contains(opponentMoves, playerMove);
 };
 
 var GameStore = Reflux.createStore({
@@ -82,13 +82,6 @@ var GameStore = Reflux.createStore({
     _state.isGameActive = true;
     _state.isGamePlayed = false;
 
-    _state.activeGame = {
-      _id: Date.now(),
-      correctMove: _getRandomMove(),
-      playerMove: undefined,
-      opponentMoves: [_getRandomMove(), _getRandomMove()]
-    };
-
     this.trigger(_state);
   },
 
@@ -97,10 +90,20 @@ var GameStore = Reflux.createStore({
     _state.isGameActive = false;
     _state.isGamePlayed = true;
 
-    _state.activeGame.playerMove = _getMoveFromId(moveId);
+    var playerMove = _getMoveFromId(moveId);
+    var correctMove = _getRandomMove();
+    var opponentMoves = [_getRandomMove(), _getRandomMove()];
+    var isWonByGuessing = _getIsWonByGuessing(playerMove, correctMove);
+    var isWonByDisagreeing = _getIsWonByDisagreeing(playerMove, opponentMoves);
 
-    _state.isGameWonByGuessing = _getIsGameWonByGuessing(_state.activeGame.playerMove);
-    _state.isGameWonByDisagreeing = _getIsGameWonByDisagreeing(_state.activeGame.playerMove);
+    _state.activeGame = {
+      _id: Date.now(),
+      playerMove: playerMove,
+      correctMove: correctMove,
+      opponentMoves: opponentMoves,
+      isWonByGuessing: isWonByGuessing,
+      isWonByDisagreeing: isWonByDisagreeing
+    };
 
     this.trigger(_state);
   }

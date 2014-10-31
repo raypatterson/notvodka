@@ -10,11 +10,12 @@ var GameResult = React.createClass({
 
     console.log('props', this.props);
 
-    var opponentMoves = this.props.game.opponentMoves
+    var game = this.props.game;
+    var opponentMoves = game.opponentMoves
     var opponentMoveElements = [];
 
     var i = 0,
-      l = this.props.game.opponentMoves.length,
+      l = game.opponentMoves.length,
       move;
 
     for (i; i < l; i++) {
@@ -27,11 +28,11 @@ var GameResult = React.createClass({
 
     var statusMessage = [];
 
-    if (this.props.isGameWonByGuessing) {
+    if (game.isWonByGuessing) {
 
       statusMessage.push(<p>You <b>won</b> because you guessed <b>right</b>, </p>);
 
-      if (this.props.isGameWonByDisagreeing) {
+      if (game.isWonByDisagreeing) {
         statusMessage.push(<p>AND you <b>won</b> because you <b>disagreed</b> with everyone else!</p>);
       } else {
         statusMessage.push(<p>BUT you <b>lost</b> because you <b>agreed</b> with someone else!</p>);
@@ -40,7 +41,7 @@ var GameResult = React.createClass({
 
       statusMessage.push(<p>You <b>lost</b> because you guessed <b>wrong</b>,</p>);
 
-      if (this.props.isGameWonByDisagreeing) {
+      if (game.isWonByDisagreeing) {
         statusMessage.push(<p>BUT you <b>won</b> because you <b>disagreed</b> with everyone else!</p>);
       } else {
         statusMessage.push(<p>AND you <b>lost</b> because you <b>agreed</b> with someone else!</p>);
@@ -50,8 +51,8 @@ var GameResult = React.createClass({
     return (
 
       <div>
-        <p>The correct answer was: <b>{this.props.game.correctMove.title}</b></p>
-        <p>You answered: <b>{this.props.game.playerMove.title}</b></p>
+        <p>The correct answer was: <b>{game.correctMove.title}</b></p>
+        <p>You answered: <b>{game.playerMove.title}</b></p>
         <p>Your opponenets answered:</p>
         <p>{opponentMoveElements}</p>
         {statusMessage}
