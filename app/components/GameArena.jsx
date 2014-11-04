@@ -21,7 +21,7 @@ var GameArena = React.createClass({
 
     event.preventDefault();
 
-    GameActions.playGame(event.target.dataset.id);
+    GameActions.playGame(event.target.dataset.type);
 
     return false;
   },
@@ -37,7 +37,7 @@ var GameArena = React.createClass({
 
       var moveButtonElements = this.state.potentialMoves.map(function(option) {
         return (
-          <button data-id={option._id} onClick={self.onClick} type="button" className="btn btn-lg btn-default">{option.title}</button>
+          <button data-type={option.type} onClick={self.onClick} type="button" className="btn btn-lg btn-default">{option.title}</button>
         );
       });
 

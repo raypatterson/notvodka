@@ -8,8 +8,6 @@ var GameResult = React.createClass({
 
   render: function() {
 
-    console.log('props', this.props);
-
     var game = this.props.game;
     var opponentMoves = game.opponentMoves
     var opponentMoveElements = [];

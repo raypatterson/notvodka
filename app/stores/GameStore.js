@@ -2,45 +2,14 @@ var Reflux = require('reflux');
 var _ = require('lodash');
 
 var GameController = require('../controllers/GameController');
+var MoveController = require('../controllers/MoveController');
 
 var _state = {
   games: [], // Stored in Firebase
   activeGame: undefined,
   isGameActive: false,
   isGamePlayed: false,
-  isGameWonByDisagreeing: false,
-  isGameWonByGuessing: false,
-  potentialMoves: [{
-    _id: '0',
-    title: 'Yes'
-  }, {
-    _id: '1',
-    title: 'No'
-  }]
-};
-
-// var _games = [];
-
-var _getRandomMove = function() {
-
-  return _state.potentialMoves[Math.floor(Math.random() * _state.potentialMoves.length)];
-};
-
-var _getMoveFromId = function(id) {
-
-  return _.find(_state.potentialMoves, function(move) {
-    return move._id === id;
-  });
-};
-
-var _getIsWonByGuessing = function(playerMove, correctMove) {
-
-  return playerMove._id === correctMove._id ? true : false;
-};
-
-var _getIsWonByDisagreeing = function(playerMove, opponentMoves) {
-
-  return !_.contains(opponentMoves, playerMove);
+  potentialMoves: MoveController.MOVE_LIST
 };
 
 var GameStore = Reflux.createStore({
@@ -85,25 +54,16 @@ var GameStore = Reflux.createStore({
     this.trigger(_state);
   },
 
-  onPlayGame: function(moveId) {
+  onPlayGame: function(moveType) {
+
+    var game = GameController.getGame2();
+
+    console.log('game', game);
+
+    _state.activeGame = GameController.getGame(moveType);
 
     _state.isGameActive = false;
     _state.isGamePlayed = true;
-
-    var playerMove = _getMoveFromId(moveId);
-    var correctMove = _getRandomMove();
-    var opponentMoves = [_getRandomMove(), _getRandomMove()];
-    var isWonByGuessing = _getIsWonByGuessing(playerMove, correctMove);
-    var isWonByDisagreeing = _getIsWonByDisagreeing(playerMove, opponentMoves);
-
-    _state.activeGame = {
-      _id: Date.now(),
-      playerMove: playerMove,
-      correctMove: correctMove,
-      opponentMoves: opponentMoves,
-      isWonByGuessing: isWonByGuessing,
-      isWonByDisagreeing: isWonByDisagreeing
-    };
 
     this.trigger(_state);
   }
