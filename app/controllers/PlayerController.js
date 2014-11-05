@@ -14,16 +14,6 @@ var PlayerController = {
       hasWonByGuessing: false,
       hasWonByDisagreeing: false
     }
-  },
-
-  getHasWonByGuessing: function(playerMove, correctMove) {
-
-    return playerMove.type === correctMove.type ? true : false;
-  },
-
-  getHasWonByDisagreeing: function(playerMove, opponentMoves) {
-
-    return !_.contains(opponentMoves, playerMove);
   }
 };
 

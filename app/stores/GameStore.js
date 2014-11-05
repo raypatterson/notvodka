@@ -2,6 +2,7 @@ var Reflux = require('reflux');
 var _ = require('lodash');
 
 var GameController = require('../controllers/GameController');
+var PlayerController = require('../controllers/PlayerController');
 var MoveController = require('../controllers/MoveController');
 
 var _state = {
@@ -9,7 +10,8 @@ var _state = {
   activeGame: undefined,
   isGameActive: false,
   isGamePlayed: false,
-  potentialMoves: MoveController.MOVE_LIST
+  potentialMoves: MoveController.MOVE_LIST,
+  player: PlayerController.getPlayer()
 };
 
 var GameStore = Reflux.createStore({
@@ -18,12 +20,16 @@ var GameStore = Reflux.createStore({
 
   getInitialState: function() {
 
+    console.log('_state', _state);
+
     return _state;
   },
 
   setInitialState: function(games) {
 
-    _state.game = GameController.getGame2();
+    // _state = GameController.getInitialState();
+
+    console.log('_state', _state);
 
     // Storing list of 'games' for now
     _state.games = games || [];
@@ -58,12 +64,16 @@ var GameStore = Reflux.createStore({
 
   onPlayGame: function(moveType) {
 
-    _state.activeGame = GameController.getGame(moveType);
+    console.log('game', game);
+
+    _state.game = GameController.updateGame(game);
+
+    console.log('game', game);
 
     _state.isGameActive = false;
     _state.isGamePlayed = true;
 
-    this.trigger(_state);
+    // this.trigger(_state);
   },
 
   onCheckGame: function(game) {

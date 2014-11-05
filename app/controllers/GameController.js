@@ -6,7 +6,7 @@ var PlayerController = require('./PlayerController');
 var MoveController = require('./MoveController');
 var GameActions = require('../actions/GameActions');
 
-var PLAYER_LIMIT = 3;
+var OPPONENT_MOVE_LIMIT = 2;
 var MOVE_TIME_INTERVAL = 50;
 var MOVE_TIME_LIMIT = 1000 * 5;
 
@@ -14,7 +14,7 @@ var _activeGames = [];
 
 var _checkGameStatus = function(game) {
 
-  console.log('Check Game Status', game);
+  // console.log('Check Game Status', game);
 
   if (game.isPlayed) {
     // Check for any player moves
@@ -62,7 +62,7 @@ var _getNewGame = function() {
   var game = {
     _id: Date.now(),
     correctMove: MoveController.getRandomMove(),
-    players: []
+    opponentMoves: []
   };
 
   _activeGames.push(game);
@@ -72,13 +72,13 @@ var _getNewGame = function() {
 
 var _getActiveGame = function() {
 
-  console.log('Get Active Game');
+  // console.log('Get Active Game');
 
   var i, game;
 
   for (i in _activeGames) {
     game = _activeGames[i];
-    if (game.players.length < PLAYER_LIMIT) {
+    if (game.opponentMoves.length < OPPONENT_MOVE_LIMIT) {
       return game;
     }
   };
@@ -88,13 +88,21 @@ var _getActiveGame = function() {
 
 var _getGame = function() {
 
-  console.log('Get Game');
-
   var game = _activeGames.length === 0 ? _getNewGame() : _getActiveGame();
 
   _setGameTimer(game);
 
   return game;
+};
+
+_getHasWonByGuessing = function(playerMoveType, correctMoveType) {
+
+  return playerMoveType === correctMoveType ? true : false;
+};
+
+_getHasWonByDisagreeing = function(playerMove, opponentMoves) {
+
+  return !_.contains(opponentMoves, playerMove);
 };
 
 var _setOnceEventHandler = function(ref, cb) {
@@ -144,11 +152,25 @@ var GameController = {
     };
   },
 
-  getGame2: function() {
+  updateGame: function(game) {
 
-    _activeGames.push(_getNewGame());
+    game.player.hasWonByGuessing = _getHasWonByGuessing(game.player.move.type, game.correctMove.type);
+    game.player.hasWonByDisagreeing = _getHasWonByDisagreeing(game.player.move, game.opponentMoves);
 
-    return _getGame();
+    return game;
+  },
+
+  getInitialState: function() {
+
+    return {
+      games: [], // Stored in Firebase
+      game: _getGame(),
+      activeGame: undefined,
+      isGameActive: false,
+      isGamePlayed: false,
+      potentialMoves: MoveController.MOVE_LIST,
+      player: PlayerController.getPlayer()
+    };
   }
 };
 
