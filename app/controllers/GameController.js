@@ -4,27 +4,55 @@ var fbGames = fb.child('games');
 
 var PlayerController = require('./PlayerController');
 var MoveController = require('./MoveController');
+var GameActions = require('../actions/GameActions');
 
 var PLAYER_LIMIT = 3;
-var MOVE_TIMEOUT = 1000 * 5;
+var MOVE_TIME_INTERVAL = 50;
+var MOVE_TIME_LIMIT = 1000 * 5;
 
 var _activeGames = [];
 
 var _checkGameStatus = function(game) {
+
   console.log('Check Game Status', game);
 
-  // Check for any player moves
+  if (game.isPlayed) {
+    // Check for any player moves
+    // Score game
+  } else {
 
+    game.correctMove = MoveController.getRandomMove();
+
+    GameActions.checkGame(game);
+
+    _setGameTimer(game);
+  }
 };
 
 var _setGameTimer = function(game) {
 
   console.log('Set Game Timer');
 
-  game.timer = setTimeout(function() {
-    clearTimeout(game.timer);
-    _checkGameStatus(game);
-  }, MOVE_TIMEOUT);
+  game.elapse = 0;
+  game.progress = 0;
+
+  game.timer = setInterval(function() {
+
+    if (game.elapse < MOVE_TIME_LIMIT) {
+
+      game.elapse += MOVE_TIME_INTERVAL;
+      game.progress = game.elapse / MOVE_TIME_LIMIT;
+      game.secondsRemaining = Math.floor((MOVE_TIME_LIMIT - game.elapse) / 1000) + 1;
+
+      GameActions.checkGame(game);
+
+    } else {
+
+      clearInterval(game.timer);
+
+      _checkGameStatus(game);
+    }
+  }, MOVE_TIME_INTERVAL);
 }
 
 var _getNewGame = function() {

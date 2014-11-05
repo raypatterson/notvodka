@@ -31,21 +31,33 @@ var GameArena = React.createClass({
     if (this.state.isGamePlayed) {
 
       return null;
+
     } else {
 
       var self = this;
 
-      var moveButtonElements = this.state.potentialMoves.map(function(option) {
+      var gameButtonElements = this.state.potentialMoves.map(function(option) {
         return (
           <button data-type={option.type} onClick={self.onClick} type="button" className="btn btn-lg btn-default">{option.title}</button>
         );
       });
 
+      var statusStyle = {
+        width: (this.state.game.progress * 100) + "%"
+      };
+
       return (
 
         <div className="row">
-          <div className={"game-arena col-md-12"}>
-            <div>{moveButtonElements}</div>
+          <div className="game-arena col-md-12">
+            <div className="game-buttons">{gameButtonElements}</div>
+            <div className="game-progress-message">
+              <p>A new game will begin in {this.state.game.secondsRemaining} seconds</p>
+            </div>
+            <div className="game-progress-bar">
+              <div className="game-progress-total"></div>
+              <div className="game-progress-elapse" style={statusStyle}></div>
+            </div>
           </div>
         </div>
       )

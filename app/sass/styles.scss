@@ -24,6 +24,32 @@ body {
   }
 }
 
+.game-progress-message {
+  text-align: center;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.game-progress-bar {
+  width: 100%;
+  height: 1px;
+  border-bottom: solid white 1px;
+}
+
+.game-progress-elapse {
+  position: absolute;
+  background: black;
+  opacity: 0.25;
+  height: inherit;
+}
+
+.game-progress-total {
+  position: absolute;
+  background: #e0e0e0;
+  width: 100%;
+  height: inherit;
+}
+
 .game-arena .btn {
   width: 100px;
   margin-right: 10px;

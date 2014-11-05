@@ -23,6 +23,8 @@ var GameStore = Reflux.createStore({
 
   setInitialState: function(games) {
 
+    _state.game = GameController.getGame2();
+
     // Storing list of 'games' for now
     _state.games = games || [];
 
@@ -56,14 +58,17 @@ var GameStore = Reflux.createStore({
 
   onPlayGame: function(moveType) {
 
-    var game = GameController.getGame2();
-
-    console.log('game', game);
-
     _state.activeGame = GameController.getGame(moveType);
 
     _state.isGameActive = false;
     _state.isGamePlayed = true;
+
+    this.trigger(_state);
+  },
+
+  onCheckGame: function(game) {
+
+    _state.game = game;
 
     this.trigger(_state);
   }
