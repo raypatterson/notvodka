@@ -28,7 +28,7 @@ var GameArena = React.createClass({
 
   render: function() {
 
-    if (this.state.isGamePlayed) {
+    if (this.state.isGameComplete) {
 
       return null;
 
@@ -43,7 +43,7 @@ var GameArena = React.createClass({
       });
 
       var statusStyle = {
-        width: (this.state.game.progress * 100) + "%"
+        width: (this.state.activeGame.progress * 100) + "%"
       };
 
       return (
@@ -52,7 +52,7 @@ var GameArena = React.createClass({
           <div className="game-arena col-md-12">
             <div className="game-buttons">{gameButtonElements}</div>
             <div className="game-progress-message">
-              <p>A new game will begin in {this.state.game.secondsRemaining} seconds</p>
+              <p>A new game will begin in {this.state.activeGame.secondsRemaining} seconds</p>
             </div>
             <div className="game-progress-bar">
               <div className="game-progress-total"></div>

@@ -11,7 +11,7 @@ require('node-jsx').install({
 });
 
 var App = require('./app/App.jsx');
-var GameController = require('./app/controllers/GameController');
+var StateController = require('./app/controllers/StateController');
 
 var React = require('react');
 
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Render React on Server
 app.get('/', function(req, res) {
 
-  GameController.getInitialState(function(state) {
+  StateController.getInitialStateAsync(function(state) {
 
     var markup = React.renderComponentToString(App({
       state: state
@@ -42,7 +42,9 @@ app.get('/', function(req, res) {
 
     res.render('index', {
       markup: markup,
-      state: JSON.stringify(state)
+      data: JSON.stringify({
+        state: state
+      })
     });
   });
 });

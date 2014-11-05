@@ -50,7 +50,7 @@ var GameResult = React.createClass({
 
       <div>
         <p>The correct answer was: <b>{game.correctMove.title}</b></p>
-        <p>You answered: <b>{game.playerMove.title}</b></p>
+        <p>You answered: <b>{this.props.player.move.title}</b></p>
         <p>Your opponenets answered:</p>
         <p>{opponentMoveElements}</p>
         {statusMessage}

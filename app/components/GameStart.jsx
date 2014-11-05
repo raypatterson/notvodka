@@ -28,7 +28,7 @@ var GameStart = React.createClass({
 
   render: function() {
 
-    if (this.state.isGamePlayed) {
+    if (this.state.isGameComplete) {
 
       return (
 

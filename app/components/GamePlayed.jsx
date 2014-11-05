@@ -20,13 +20,13 @@ var GamePlayed = React.createClass({
 
   render: function() {
 
-    if (this.state.isGamePlayed) {
+    if (this.state.isGameComplete) {
 
       return (
         <div className="row">
           <div className={"col-md-12"}>
             <h2 className="h3">Game Results</h2>
-            <GameResult key={this.state.activeGame._id} game={this.state.activeGame} />
+            <GameResult key={this.state.activeGame._id} game={this.state.activeGame} player={this.state.player} />
           </div>
         </div>
       );

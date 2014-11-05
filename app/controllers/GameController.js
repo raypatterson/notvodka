@@ -2,28 +2,38 @@ var Firebase = require('firebase');
 var fb = new Firebase('https://isitvodka.firebaseio.com/');
 var fbGames = fb.child('games');
 
-var PlayerController = require('./PlayerController');
-var MoveController = require('./MoveController');
 var GameActions = require('../actions/GameActions');
 
-var PLAYER_LIMIT = 3;
+var PlayerController = require('./PlayerController');
+var MoveController = require('./MoveController');
+
+var OPPONENT_MOVE_LIMIT = 3;
 var MOVE_TIME_INTERVAL = 50;
 var MOVE_TIME_LIMIT = 1000 * 5;
 
+var _state = {};
 var _activeGames = [];
 
 var _checkGameStatus = function(game) {
 
-  console.log('Check Game Status', game);
+  console.log('Check Game Status');
 
-  if (game.isPlayed) {
-    // Check for any player moves
-    // Score game
+  if (_state.isGamePlayed) {
+
+    console.log('_state', _state);
+
+    _state.activeGame.opponentMoves.push(MoveController.getRandomMove());
+    _state.activeGame.opponentMoves.push(MoveController.getRandomMove());
+
+    _state.isGameComplete = true;
+
+    GameActions.scoreGame(_state);
+
   } else {
 
     game.correctMove = MoveController.getRandomMove();
 
-    GameActions.checkGame(game);
+    GameActions.checkGame(_state);
 
     _setGameTimer(game);
   }
@@ -44,7 +54,7 @@ var _setGameTimer = function(game) {
       game.progress = game.elapse / MOVE_TIME_LIMIT;
       game.secondsRemaining = Math.floor((MOVE_TIME_LIMIT - game.elapse) / 1000) + 1;
 
-      GameActions.checkGame(game);
+      GameActions.checkGame(_state);
 
     } else {
 
@@ -62,7 +72,7 @@ var _getNewGame = function() {
   var game = {
     _id: Date.now(),
     correctMove: MoveController.getRandomMove(),
-    players: []
+    opponentMoves: []
   };
 
   _activeGames.push(game);
@@ -78,7 +88,7 @@ var _getActiveGame = function() {
 
   for (i in _activeGames) {
     game = _activeGames[i];
-    if (game.players.length < PLAYER_LIMIT) {
+    if (game.opponentMoves.length < OPPONENT_MOVE_LIMIT) {
       return game;
     }
   };
@@ -97,58 +107,34 @@ var _getGame = function() {
   return game;
 };
 
-var _setOnceEventHandler = function(ref, cb) {
-
-  ref.once('value', function(state) {
-
-    cb(state.val());
-
-  }, function(error) {
-
-    console.log('WUHWUHWUHwuhwuh wuh wuh  wuh  wuh  wuuuuuhhhhh' + error.code);
-  });
-};
-
 var GameController = {
 
-  getInitialState: function(cb) {
+  setInitialState: function(state) {
 
-    _setOnceEventHandler(fb, cb);
-  },
-
-  addGame: function(game, cb) {
-
-    console.log('GameController.addGame', game);
-
-    _setOnceEventHandler(fbGames, cb);
-
-    fbGames.push(game);
-  },
-
-  getGame: function(moveType) {
-
-    var playerMove = MoveController.getMoveByType(moveType);
-    var correctMove = MoveController.getRandomMove();
-    var opponentMoves = [MoveController.getRandomMove(), MoveController.getRandomMove()];
-    var isWonByGuessing = PlayerController.getHasWonByGuessing(playerMove, correctMove);
-    var isWonByDisagreeing = PlayerController.getHasWonByDisagreeing(playerMove, opponentMoves);
-
-    return {
-
-      _id: Date.now(),
-      playerMove: playerMove,
-      correctMove: correctMove,
-      opponentMoves: opponentMoves,
-      isWonByGuessing: isWonByGuessing,
-      isWonByDisagreeing: isWonByDisagreeing
+    _state = {
+      games: state.games || [], // From Firebase
+      activeGame: _getGame(),
+      isGameActive: false,
+      isGamePlayed: false,
+      isGameComplete: false,
+      potentialMoves: MoveController.MOVE_LIST,
+      player: PlayerController.getPlayer()
     };
+
+    GameActions.initGame(_state);
   },
 
-  getGame2: function() {
+  getState: function() {
 
-    _activeGames.push(_getNewGame());
+    return _state;
+  },
 
-    return _getGame();
+  updatePlayerMove: function(moveType) {
+
+    _state.player.move = MoveController.getMoveByType(moveType);
+    _state.isGamePlayed = true;
+
+    return _state;
   }
 };
 

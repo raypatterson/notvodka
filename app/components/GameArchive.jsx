@@ -28,7 +28,7 @@ var GameArchive = React.createClass({
       var gameElements = games.map(function(game) {
 
         return (
-          <GameResult key={game._id} game={game} />
+          <GameResult key={game._id} game={game} player={this.state.player} />
         );
       });
 
