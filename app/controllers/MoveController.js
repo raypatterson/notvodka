@@ -2,7 +2,7 @@ var MoveController = {
 
   MOVE_LIST: [{
     type: '0',
-    title: 'Yessss'
+    title: 'Yes'
   }, {
     type: '1',
     title: 'No'

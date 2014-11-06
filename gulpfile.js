@@ -8,32 +8,31 @@ var webpack = require('gulp-webpack');
 var autoprefixer = require('autoprefixer-core');
 var runSequence = require('run-sequence');
 
-gulp.task('default', ['clean', 'nodemon'], function(cb) {
-  open('http://localhost:8000', 'google chrome');
-  cb();
+gulp.task('default', function() {
+  runSequence('clean', 'nodemon', 'webpack', 'open');
 });
 
-gulp.task('build', function(cb) {
-  runSequence(['webpack'], cb);
+gulp.task('open', function() {
+  open('http://localhost:8000', 'google chrome');
 });
 
 gulp.task('clean', function(cb) {
   del(['public/js'], cb);
 });
 
-gulp.task('nodemon', function(cb) {
-  nodemon({
-    script: 'bin/www',
-    ext: 'js jsx html ejs scss',
-    ignore: ['public/**', 'node_modules/']
-  })
+gulp.task('nodemon', function() {
+  return nodemon({
+      script: 'bin/www',
+      ext: 'js jsx html ejs scss',
+      ignore: ['public/**', 'node_modules/']
+    })
     .on('start', function() {
-      runSequence(['webpack'], cb);
+      console.log('START');
     });
 });
 
-gulp.task('webpack', function(cb) {
-  gulp.src(['app/*.jsx', 'app/sass/*'])
+gulp.task('webpack', function() {
+  return gulp.src(['app/*.jsx', 'app/sass/*'])
     .pipe(webpack({
       module: {
         loaders: [{
@@ -51,8 +50,5 @@ gulp.task('webpack', function(cb) {
         filename: 'js/bundle.js',
       }
     }))
-    .pipe(gulp.dest('public/'))
-    .on('end', function() {
-      cb();
-    });
+    .pipe(gulp.dest('public/'));
 });
