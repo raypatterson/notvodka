@@ -12,7 +12,7 @@ var App = require('./App.jsx');
 if (typeof window !== 'undefined') {
 
   window.onload = function() {
-    var data = JSON.parse(document.getElementById('game-state').innerHTML);
+    var data = JSON.parse(document.getElementById('game-data').innerHTML);
     var state = data ? data.state : {};
     React.renderComponent(
       <App state={state} />,

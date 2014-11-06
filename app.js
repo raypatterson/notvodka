@@ -5,17 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-//For requiring `.jsx` files as Node modules
-require('node-jsx').install({
-  extension: '.jsx'
-});
-
-var App = require('./app/App.jsx');
-var GameController = require('./app/controllers/GameController');
-
-var React = require('react');
-
 var app = express();
+
+var routes = require('./routes');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app/views'));
@@ -31,22 +23,10 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Render React on Server
-app.get('/', function(req, res) {
+// Routes
+app.get('/', routes.index);
 
-  GameController.getInitialState(function(state) {
-
-    var markup = React.renderComponentToString(App({
-      state: state
-    }));
-
-    res.render('index', {
-      markup: markup,
-      state: JSON.stringify(state)
-    });
-  });
-});
-
+app.post('/api/move', routes.api.move);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

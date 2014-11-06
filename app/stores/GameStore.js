@@ -1,18 +1,6 @@
 var Reflux = require('reflux');
-var _ = require('lodash');
 
 var GameController = require('../controllers/GameController');
-var PlayerController = require('../controllers/PlayerController');
-var MoveController = require('../controllers/MoveController');
-
-var _state = {
-  games: [], // Stored in Firebase
-  activeGame: undefined,
-  isGameActive: false,
-  isGamePlayed: false,
-  potentialMoves: MoveController.MOVE_LIST,
-  player: PlayerController.getPlayer()
-};
 
 var GameStore = Reflux.createStore({
 
@@ -20,67 +8,40 @@ var GameStore = Reflux.createStore({
 
   getInitialState: function() {
 
-    console.log('_state', _state);
-
-    return _state;
+    return GameController.getState();
   },
 
-  setInitialState: function(games) {
+  onInitGame: function(state) {
 
-    // _state = GameController.getInitialState();
-
-    console.log('_state', _state);
-
-    // Storing list of 'games' for now
-    _state.games = games || [];
-
-    this.trigger(_state);
-  },
-
-  addGame: function(game) {
-
-    var self = this;
-
-    GameController.addGame(game, function(games) {
-
-      _state.games = games;
-
-      self.trigger(_state);
-    });
+    this.trigger(state);
   },
 
   onStartGame: function() {
 
-    if (_state.activeGame) {
-
-      this.addGame(_state.activeGame);
-    }
-
-    _state.isGameActive = true;
-    _state.isGamePlayed = false;
-
-    this.trigger(_state);
+    this.trigger(GameController.getState());
   },
 
   onPlayGame: function(moveType) {
 
-    console.log('game', game);
+    console.log('onPlayGame');
 
-    _state.game = GameController.updateGame(game);
+    var state = GameController.updatePlayerMove(moveType);
 
-    console.log('game', game);
-
-    _state.isGameActive = false;
-    _state.isGamePlayed = true;
-
-    // this.trigger(_state);
+    this.trigger(state);
   },
 
-  onCheckGame: function(game) {
+  onCheckGame: function(state) {
 
-    _state.game = game;
+    // console.log('onCheckGame');
 
-    this.trigger(_state);
+    this.trigger(state);
+  },
+
+  onScoreGame: function(state) {
+
+    console.log('onScoreGame');
+
+    this.trigger(state);
   }
 });
 
