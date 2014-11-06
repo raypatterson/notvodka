@@ -2,19 +2,21 @@ var TIME_INTERVAL = 1000;
 var TIME_LIMIT = 1000 * 5;
 
 var _activeConnections = 0;
+var _isGameTicActive = false;
+var _isServerConnected = false;
 
 var _gameTic;
 
 var _stopGameTic = function() {
 
-  console.log('_stopGameTic');
+  // console.log('_stopGameTic');
 
   clearInterval(_gameTic);
 };
 
 var _startGameTic = function(socket, elapse) {
 
-  console.log('_startGameTic');
+  // console.log('_startGameTic');
 
   _gameTic = setInterval(function() {
 
@@ -48,28 +50,45 @@ var Sockets = function(io) {
 
   io.on('connection', function(socket) {
 
-    if (_activeConnections === 1) {
-      _startGameTic(socket, 0);
-    }
+    if (_isServerConnected === true) {
 
-    _activeConnections += 1;
+      _activeConnections += 1;
 
-    console.log('connection', _activeConnections);
+      console.log(_activeConnections + ' socket clients connected');
 
-    socket.on('disconnect', function() {
+      if (_isGameTicActive === false) {
 
-      _activeConnections -= 1;
+        console.log('Starting game tic.');
 
-      if (_activeConnections === 1) {
-        _stopGameTic();
+        _isGameTicActive = true;
+        _startGameTic(socket, 0);
       }
 
-      console.log('disconnect', _activeConnections);
-    });
+      socket.on('disconnect', function() {
 
-    socket.on('toc', function(data) {
-      console.log('toc', data);
-    });
+        _activeConnections -= 1;
+
+        console.log(_activeConnections + ' socket clients connected');
+
+        if (_isGameTicActive === true && _activeConnections === 0) {
+
+          console.log('Stopping game tic.');
+
+          _isGameTicActive = false;
+          _stopGameTic();
+        }
+      });
+
+      socket.on('toc', function(data) {
+        console.log('toc', data);
+      });
+
+    } else {
+
+      _isServerConnected = true;
+
+      console.log('Socket server has connected');
+    }
   });
 };
 

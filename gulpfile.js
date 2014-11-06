@@ -1,43 +1,39 @@
 var pkg = require('./package');
 var del = require('del');
 var path = require('path');
+var open = require('open');
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
 var webpack = require('gulp-webpack');
-var browserSync = require('browser-sync');
-var runSequence = require('run-sequence');
 var autoprefixer = require('autoprefixer-core');
-var reload = browserSync.reload;
+var runSequence = require('run-sequence');
 
-gulp.task('default', function() {
-  runSequence(['del', 'nodemon', 'browser-sync']);
+gulp.task('default', ['clean', 'nodemon'], function(cb) {
+  open('http://localhost:8000', 'google chrome');
+  cb();
 });
 
-gulp.task('reload', function() {
-  setTimeout(function() {
-    reload({
-      stream: false
+gulp.task('build', function(cb) {
+  runSequence(['webpack'], cb);
+});
+
+gulp.task('clean', function(cb) {
+  del(['public/js'], cb);
+});
+
+gulp.task('nodemon', function(cb) {
+  nodemon({
+    script: 'bin/www',
+    ext: 'js jsx html ejs scss',
+    ignore: ['public/**', 'node_modules/']
+  })
+    .on('start', function() {
+      runSequence(['webpack'], cb);
     });
-  }, 1000);
 });
 
-gulp.task('nodemon', function() {
-  return nodemon({
-      script: 'bin/www',
-      ext: 'js jsx html ejs scss',
-      ignore: ['public/**/*.*', 'node_modules/']
-    })
-    .on('start', 'build');
-});
-
-gulp.task('del', function() {
-  del.sync(['public/js']);
-});
-
-gulp.task('build', ['webpack', 'reload']);
-
-gulp.task('webpack', function() {
-  return gulp.src(['app/*.jsx', 'app/sass/*'])
+gulp.task('webpack', function(cb) {
+  gulp.src(['app/*.jsx', 'app/sass/*'])
     .pipe(webpack({
       module: {
         loaders: [{
@@ -55,13 +51,8 @@ gulp.task('webpack', function() {
         filename: 'js/bundle.js',
       }
     }))
-    .pipe(gulp.dest('public/'));
-});
-
-gulp.task('browser-sync', function() {
-  browserSync.init(null, {
-    proxy: 'http://localhost:8000',
-    browser: 'google chrome',
-    port: 7000,
-  });
+    .pipe(gulp.dest('public/'))
+    .on('end', function() {
+      cb();
+    });
 });

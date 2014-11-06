@@ -12,5 +12,4 @@ var server = app.listen(app.get('port'), function() {
 // Sockets
 server.listen(server.address().port);
 var io = require('socket.io')(server);
-io.path = '/fooooooo';
 var sockets = require('../sockets')(io);

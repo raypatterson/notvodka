@@ -1,5 +1,6 @@
 var request = require('superagent');
 var socket = require('socket.io-client')('http://localhost:8000');
+var $ = require('jquery');
 
 var GameActions = require('../actions/GameActions');
 
@@ -44,9 +45,9 @@ var _connectGameTic = function() {
     console.log('connect');
     socket.on('tic', function(data) {
       console.log('tic', data);
-      socket.emit('toc', {
-        time: data
-      });
+      // socket.emit('toc', {
+      //   time: data
+      // });
 
       _state.activeGame.time = data.time;
 
