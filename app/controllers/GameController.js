@@ -1,6 +1,5 @@
-var Firebase = require('firebase');
-var fb = new Firebase('https://isitvodka.firebaseio.com/');
-var fbGames = fb.child('games');
+var request = require('superagent');
+var socket = require('socket.io-client')('http://localhost:8000');
 
 var GameActions = require('../actions/GameActions');
 
@@ -16,7 +15,7 @@ var _activeGames = [];
 
 var _checkGameStatus = function(game) {
 
-  console.log('Check Game Status');
+  // console.log('Check Game Status');
 
   if (_state.isGamePlayed) {
 
@@ -39,35 +38,52 @@ var _checkGameStatus = function(game) {
   }
 };
 
-var _setGameTimer = function(game) {
+var _connectGameTic = function() {
 
-  console.log('Set Game Timer');
+  socket.on('connect', function() {
+    console.log('connect');
+    socket.on('tic', function(data) {
+      console.log('tic', data);
+      socket.emit('toc', {
+        time: data
+      });
 
-  game.elapse = 0;
-  game.progress = 0;
-
-  game.timer = setInterval(function() {
-
-    if (game.elapse < MOVE_TIME_LIMIT) {
-
-      game.elapse += MOVE_TIME_INTERVAL;
-      game.progress = game.elapse / MOVE_TIME_LIMIT;
-      game.secondsRemaining = Math.floor((MOVE_TIME_LIMIT - game.elapse) / 1000) + 1;
+      _state.activeGame.time = data.time;
 
       GameActions.checkGame(_state);
-
-    } else {
-
-      clearInterval(game.timer);
-
-      _checkGameStatus(game);
-    }
-  }, MOVE_TIME_INTERVAL);
+    });
+  });
 }
+
+// var _setGameTimer = function(game) {
+
+//   // console.log('Set Game Timer');
+
+//   game.elapse = 0;
+//   game.progress = 0;
+
+//   game.timer = setInterval(function() {
+
+//     if (game.elapse < MOVE_TIME_LIMIT) {
+
+//       game.elapse += MOVE_TIME_INTERVAL;
+//       game.progress = game.elapse / MOVE_TIME_LIMIT;
+//       game.secondsRemaining = Math.floor((MOVE_TIME_LIMIT - game.elapse) / 1000) + 1;
+
+//       GameActions.checkGame(_state);
+
+//     } else {
+
+//       clearInterval(game.timer);
+
+//       _checkGameStatus(game);
+//     }
+//   }, MOVE_TIME_INTERVAL);
+// };
 
 var _getNewGame = function() {
 
-  console.log('Get New Game');
+  // console.log('Get New Game');
 
   var game = {
     _id: Date.now(),
@@ -82,7 +98,7 @@ var _getNewGame = function() {
 
 var _getActiveGame = function() {
 
-  console.log('Get Active Game');
+  // console.log('Get Active Game');
 
   var i, game;
 
@@ -102,7 +118,7 @@ var _getGame = function() {
 
   var game = _activeGames.length === 0 ? _getNewGame() : _getActiveGame();
 
-  _setGameTimer(game);
+  _connectGameTic();
 
   return game;
 };
@@ -133,6 +149,16 @@ var GameController = {
 
     _state.player.move = MoveController.getMoveByType(moveType);
     _state.isGamePlayed = true;
+
+    request
+      .post('/api/move')
+      .send({
+        move: _state.player.move
+      })
+      .set('Accept', 'application/json')
+      .end(function(error, res) {
+        console.log('res', res);
+      });
 
     return _state;
   }
