@@ -21,6 +21,12 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
+
+// LiveReload
+app.use(require('connect-livereload')({
+  port: 35729
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes

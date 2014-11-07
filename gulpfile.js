@@ -8,8 +8,22 @@ var webpack = require('gulp-webpack');
 var autoprefixer = require('autoprefixer-core');
 var runSequence = require('run-sequence');
 
+var livereload = require('gulp-livereload');
+
 gulp.task('default', function() {
-  runSequence('clean', 'nodemon', 'webpack', 'open');
+  runSequence('clean', 'nodemon', 'webpack', 'livereload', 'open');
+});
+
+gulp.task('build', function() {
+  runSequence('webpack', 'reload');
+});
+
+gulp.task('livereload', function() {
+  livereload.listen();
+});
+
+gulp.task('reload', function() {
+  livereload.changed();
 });
 
 gulp.task('open', function() {
@@ -21,6 +35,7 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('nodemon', function() {
+  var isStarted = false;
   return nodemon({
       script: 'bin/www',
       ext: 'js jsx html ejs scss',
@@ -28,6 +43,11 @@ gulp.task('nodemon', function() {
     })
     .on('start', function() {
       console.log('START');
+      if (isStarted === false) {
+        isStarted = true;
+      } else {
+        runSequence('build');
+      }
     });
 });
 
