@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var MoveController = {
 
   MOVE_LIST: [{

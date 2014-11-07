@@ -79,9 +79,9 @@ var Sockets = function(io) {
         }
       });
 
-      socket.on('toc', function(data) {
-        console.log('toc', data);
-      });
+      // socket.on('toc', function(data) {
+      //   console.log('toc', data);
+      // });
 
     } else {
 

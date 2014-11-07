@@ -1,18 +1,15 @@
 var request = require('superagent');
 var socket = require('socket.io-client')('http://localhost:8000');
-var $ = require('jquery');
 
 var GameActions = require('../actions/GameActions');
 
 var PlayerController = require('./PlayerController');
 var MoveController = require('./MoveController');
 
-var OPPONENT_MOVE_LIMIT = 3;
-var MOVE_TIME_INTERVAL = 50;
-var MOVE_TIME_LIMIT = 1000 * 5;
-
 var _state = {};
 var _activeGames = [];
+
+var OPPONENT_MOVE_LIMIT = 2;
 
 var _checkGameStatus = function(game) {
 
@@ -44,7 +41,7 @@ var _connectGameTic = function() {
   socket.on('connect', function() {
     console.log('connect');
     socket.on('tic', function(data) {
-      console.log('tic', data);
+      // console.log('tic', data);
       // socket.emit('toc', {
       //   time: data
       // });
@@ -54,33 +51,7 @@ var _connectGameTic = function() {
       GameActions.checkGame(_state);
     });
   });
-}
-
-// var _setGameTimer = function(game) {
-
-//   // console.log('Set Game Timer');
-
-//   game.elapse = 0;
-//   game.progress = 0;
-
-//   game.timer = setInterval(function() {
-
-//     if (game.elapse < MOVE_TIME_LIMIT) {
-
-//       game.elapse += MOVE_TIME_INTERVAL;
-//       game.progress = game.elapse / MOVE_TIME_LIMIT;
-//       game.secondsRemaining = Math.floor((MOVE_TIME_LIMIT - game.elapse) / 1000) + 1;
-
-//       GameActions.checkGame(_state);
-
-//     } else {
-
-//       clearInterval(game.timer);
-
-//       _checkGameStatus(game);
-//     }
-//   }, MOVE_TIME_INTERVAL);
-// };
+};
 
 var _getNewGame = function() {
 
@@ -148,13 +119,13 @@ var GameController = {
 
   updatePlayerMove: function(moveType) {
 
-    _state.player.move = MoveController.getMoveByType(moveType);
-    _state.isGamePlayed = true;
+    // _state.player.move = MoveController.getMoveByType(moveType);
+    // _state.isGamePlayed = true;
 
     request
-      .post('/api/move')
+      .post('api/move')
       .send({
-        move: _state.player.move
+        moveType: moveType
       })
       .set('Accept', 'application/json')
       .end(function(error, res) {

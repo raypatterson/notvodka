@@ -7,6 +7,7 @@ require('node-jsx').install({
 
 var App = require('./app/App.jsx');
 var StateController = require('./app/controllers/StateController');
+var ArenaController = require('./app/controllers/ArenaController');
 
 var Routes = {
 
@@ -29,12 +30,14 @@ var Routes = {
 
     move: function(req, res) {
 
-      console.log('req.body.move', req.body.move);
-
-      if (!req.body.hasOwnProperty('move')) {
+      if (!req.body.hasOwnProperty('moveType')) {
         res.statusCode = 400;
         return res.send('Error 400: Post syntax incorrect.');
       }
+
+      var state = ArenaController.addMove(req.body.moveType);
+
+      console.log('state', state);
 
       res.json(true);
     }
