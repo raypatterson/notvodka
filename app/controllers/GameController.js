@@ -1,5 +1,4 @@
 var request = require('superagent');
-var socket = require('socket.io-client')('http://localhost:8000');
 
 var GameActions = require('../actions/GameActions');
 
@@ -11,51 +10,51 @@ var _activeGames = [];
 
 var OPPONENT_MOVE_LIMIT = 2;
 
-var _checkGameStatus = function(game) {
+// var _checkGameStatus = function(game) {
 
-  // console.log('Check Game Status');
+//   // console.log('Check Game Status');
 
-  if (_state.isGamePlayed) {
+//   if (_state.isGamePlayed) {
 
-    console.log('_state', _state);
+//     console.log('_state', _state);
 
-    _state.activeGame.opponentMoves.push(MoveController.getRandomMove());
-    _state.activeGame.opponentMoves.push(MoveController.getRandomMove());
+//     _state.activeGame.opponentMoves.push(MoveController.getRandomMove());
+//     _state.activeGame.opponentMoves.push(MoveController.getRandomMove());
 
-    _state.isGameComplete = true;
+//     _state.isGameComplete = true;
 
-    GameActions.scoreGame(_state);
+//     GameActions.scoreGame(_state);
 
-  } else {
+//   } else {
 
-    game.correctMove = MoveController.getRandomMove();
+//     game.correctMove = MoveController.getRandomMove();
 
-    GameActions.checkGame(_state);
+//     GameActions.checkGame(_state);
 
-    _setGameTimer(game);
-  }
-};
+//     _setGameTimer(game);
+//   }
+// };
 
 var _connectGameTic = function() {
 
-  socket.on('connect', function() {
-    console.log('connect');
-    socket.on('tic', function(data) {
-      // console.log('tic', data);
-      // socket.emit('toc', {
-      //   time: data
-      // });
+  console.log('GameController._connectGameTic()');
 
-      _state.activeGame.time = data.time;
+  // socket.on('connect', function() {
+  //   console.log('connect');
+  //   socket.on('tic', function(data) {
+  //     console.log('tic', data);
+  //     socket.emit('toc', {
+  //       time: data
+  //     });
 
-      GameActions.checkGame(_state);
-    });
-  });
+  //     _state.activeGame.time = data.time;
+
+  //     GameActions.checkGame(_state);
+  //   });
+  // });
 };
 
 var _getNewGame = function() {
-
-  // console.log('Get New Game');
 
   var game = {
     _id: Date.now(),
@@ -69,8 +68,6 @@ var _getNewGame = function() {
 };
 
 var _getActiveGame = function() {
-
-  // console.log('Get Active Game');
 
   var i, game;
 
@@ -115,6 +112,13 @@ var GameController = {
   getState: function() {
 
     return _state;
+  },
+
+  updateGameTime: function(time) {
+
+    _state.activeGame.time = time;
+
+    GameActions.checkGame(_state);
   },
 
   updatePlayerMove: function(moveType) {

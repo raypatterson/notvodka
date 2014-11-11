@@ -40,6 +40,7 @@ var GameArena = React.createClass({
         return (
           <button 
             data-type={option.type} 
+            key={option.type} 
             onClick={self.onClick} 
             type="button" 
             className="btn btn-lg btn-default"

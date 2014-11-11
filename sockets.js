@@ -50,45 +50,39 @@ var Sockets = function(io) {
 
   io.on('connection', function(socket) {
 
-    if (_isServerConnected === true) {
+    console.log('Server Connect');
 
-      _activeConnections += 1;
+    _activeConnections += 1;
 
-      console.log(_activeConnections + ' socket clients connected');
+    console.log(_activeConnections + ' client sockets connected');
 
-      if (_isGameTicActive === false) {
+    if (_isGameTicActive === false) {
 
-        console.log('Starting game tic.');
+      console.log('Starting game tic.');
 
-        _isGameTicActive = true;
-        _startGameTic(socket, 0);
-      }
-
-      socket.on('disconnect', function() {
-
-        _activeConnections -= 1;
-
-        console.log(_activeConnections + ' socket clients connected');
-
-        if (_isGameTicActive === true && _activeConnections === 0) {
-
-          console.log('Stopping game tic.');
-
-          _isGameTicActive = false;
-          _stopGameTic();
-        }
-      });
-
-      // socket.on('toc', function(data) {
-      //   console.log('toc', data);
-      // });
-
-    } else {
-
-      _isServerConnected = true;
-
-      console.log('Socket server has connected');
+      _isGameTicActive = true;
+      _startGameTic(socket, 0);
     }
+
+    socket.on('disconnect', function() {
+
+      _activeConnections -= 1;
+
+      console.log(_activeConnections + ' client sockets connected');
+
+      if (_isGameTicActive === true && _activeConnections === 0) {
+
+        console.log('Stopping game tic.');
+
+        _isGameTicActive = false;
+
+        _stopGameTic();
+      }
+    });
+
+    // socket.on('toc', function(data) {
+    //   console.log('toc', data);
+    // });
   });
 };
 

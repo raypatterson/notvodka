@@ -4,11 +4,11 @@ var path = require('path');
 var open = require('open');
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
+var livereload = require('gulp-livereload');
 var webpack = require('gulp-webpack');
 var autoprefixer = require('autoprefixer-core');
 var runSequence = require('run-sequence');
 
-var livereload = require('gulp-livereload');
 
 gulp.task('default', function() {
   runSequence('clean', 'nodemon', 'webpack', 'livereload', 'open');
