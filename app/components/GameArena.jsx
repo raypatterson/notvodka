@@ -21,7 +21,7 @@ var GameArena = React.createClass({
 
     event.preventDefault();
 
-    GameActions.playGame(event.target.dataset.type);
+    GameActions.move(event.target.dataset.type);
 
     return false;
   },
@@ -36,7 +36,7 @@ var GameArena = React.createClass({
 
       var self = this;
 
-      var gameButtonElements = this.state.potentialMoves.map(function(option) {
+      var moveButtons = this.state.potentialMoves.map(function(option) {
         return (
           <button 
             data-type={option.type} 
@@ -66,7 +66,7 @@ var GameArena = React.createClass({
 
         <div className="row">
           <div className="game-arena col-md-12">
-            <div className="game-buttons">{gameButtonElements}</div>
+            <div className="game-buttons">{moveButtons}</div>
             <div className="game-progress-message">
               {progressMessage}
             </div>

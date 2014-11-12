@@ -1,71 +1,53 @@
+var request = require('superagent');
+
 var Reflux = require('reflux');
 
-var GameController = require('../controllers/GameController');
-var PlayerController = require('../controllers/PlayerController');
 var MoveController = require('../controllers/MoveController');
 
-var _state = {
-  games: [],
-  time: {},
-  isGameActive: false,
-  isGamePlayed: false,
-  isGameComplete: false,
-  activeGame: GameController.getGame(),
-  player: PlayerController.getPlayer(),
-  potentialMoves: MoveController.MOVE_LIST
-};
+var _state;
 
 var GameStore = Reflux.createStore({
 
   listenables: require('../actions/GameActions'),
+
+  setInitialState: function(state) {
+
+    _state = state;
+  },
 
   getInitialState: function() {
 
     return _state;
   },
 
-  onInit: function(state) {
-
-    _state.games = state.games; // From Firebase
-
-    this.trigger(_state);
-  },
-
   onTime: function(time) {
+
+    // console.log('onTime');
 
     _state.time = time;
 
     this.trigger(_state);
   },
 
-  onStart: function() {
+  onMove: function(moveType) {
 
-    console.log('onStart');
+    // console.log('onMove');
 
-    this.trigger(_state);
-  },
+    var self = this;
 
-  onPlay: function(moveType) {
+    request
+      .post('api/move')
+      .send({
+        moveType: moveType
+      })
+      .set('Accept', 'application/json')
+      .end(function(error, res) {
 
-    console.log('onPlay');
+        console.log('res', res);
+        // console.log('error', error);
 
-    var state = GameController.updatePlayerMove(moveType);
-
-    this.trigger(state);
-  },
-
-  onCheck: function(state) {
-
-    // console.log('onCheckGame');
-
-    this.trigger(state);
-  },
-
-  onScore: function(state) {
-
-    console.log('onScoreGame');
-
-    this.trigger(state);
+        self.trigger(_state);
+      });
   }
 });
 

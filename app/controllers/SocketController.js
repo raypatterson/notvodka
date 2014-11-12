@@ -7,11 +7,9 @@ var SocketController = function(window) {
 
   socket.on('connect', function() {
 
-    console.log('Client Connect');
-
     socket.on('tic', function(data) {
 
-      console.log('tic', data);
+      // console.log('tic', data);
 
       // socket.emit('toc', data);
 

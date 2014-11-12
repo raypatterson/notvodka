@@ -6,19 +6,31 @@ require('node-jsx').install({
 });
 
 var App = require('./app/App.jsx');
-var StateController = require('./app/controllers/StateController');
+
+var GameStore = require('./app/stores/GameStore');
+
 var ArenaController = require('./app/controllers/ArenaController');
 
 var Routes = {
 
   index: function(req, res) {
 
-    StateController.getInitialStateAsync(function(state) {
+    ArenaController.getInitialStateAsync(function(state) {
 
+      // Render ./app/views/index
       res.render('index', {
+
+        // Render markup with React
         markup: React.renderComponentToString(App({
+
+          // Seed App view with state for 
+          // all other views on _server_
           state: state
         })),
+
+        // Pass state to template so it
+        // may be retrieved for rendering
+        // views on _client_ (./app/Bootstrap)
         data: JSON.stringify({
           state: state
         })
@@ -35,11 +47,7 @@ var Routes = {
         return res.send('Error 400: Post syntax incorrect.');
       }
 
-      var state = ArenaController.addMove(req.body.moveType);
-
-      console.log('state', state);
-
-      res.json(true);
+      res.json(ArenaController.getPlayerMove(req.body.moveType));
     }
   }
 };

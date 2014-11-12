@@ -4,19 +4,18 @@
 
 var React = require('react');
 
-var GameApp = require('./components/GameApp.jsx');
+var GameStore = require('./stores/GameStore');
 
-var GameActions = require('./actions/GameActions');
+var GameStart = require('./components/GameStart.jsx');
+var GameArena = require('./components/GameArena.jsx');
+var GamePlayed = require('./components/GamePlayed.jsx');
+var GameArchive = require('./components/GameArchive.jsx');
 
 var App = React.createClass({
 
   getInitialState: function() {
 
-    // 'state' is loaded async in app.js
-    // As good a place as any to init controller
-    // GameController.setInitialState(this.props.state);
-
-    GameActions.init(this.props.state);
+    GameStore.setInitialState(this.props.state);
 
     return {};
   },
@@ -24,7 +23,17 @@ var App = React.createClass({
   render: function() {
 
     return (
-      <GameApp />
+      <div className="game-container">
+        <div className="row header">
+          <div className="col-md-12 page-header">
+            <h1>Is it Vodka?</h1>
+          </div>
+        </div>
+        <GameStart />
+        <GameArena />
+        <GamePlayed />
+        <GameArchive />
+      </div>
     );
   }
 });

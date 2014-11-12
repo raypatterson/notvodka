@@ -1,25 +1,31 @@
+var FirebaseController = require('./FirebaseController');
 var GameController = require('./GameController');
 var PlayerController = require('./PlayerController');
 var MoveController = require('./MoveController');
 
-var _state = {
-  games: [],
-  players: [],
-  moves: []
-};
-
 var ArenaController = {
 
-  getState: function() {
+  getInitialStateAsync: function(cb) {
 
-    return _state;
+    FirebaseController.getInitialStateAsync(function(state) {
+
+      state.player = PlayerController.getPlayer();
+      state.potentialMoves = MoveController.MOVE_LIST;
+
+      cb(state);
+    });
   },
 
-  addMove: function(moveType) {
+  getPlayerMove: function(playerId, moveType) {
 
-    _state.moves.push(MoveController.getMoveByType(moveType));
+    var move = MoveController.getMoveByType(moveType);
 
-    return _state;
+    var game = GameController.getGame();
+
+    return {
+      move: move,
+      game: game
+    };
   }
 };
 
