@@ -1,4 +1,4 @@
-var FirebaseController = require('./FirebaseController');
+var DatabaseController = require('./DatabaseController');
 var GameController = require('./GameController');
 var PlayerController = require('./PlayerController');
 var MoveController = require('./MoveController');
@@ -7,7 +7,7 @@ var ArenaController = {
 
   getInitialStateAsync: function(cb) {
 
-    FirebaseController.getInitialStateAsync(function(state) {
+    DatabaseController.getInitialStateAsync(function(state) {
 
       state.player = PlayerController.getPlayer();
       state.potentialMoves = MoveController.MOVE_LIST;

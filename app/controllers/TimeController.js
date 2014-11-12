@@ -47,7 +47,7 @@ var TimeController = {
 
   stop: function() {
 
-    console.log('Stop tic');
+    console.log('Stopping tic');
 
     _stop();
   }

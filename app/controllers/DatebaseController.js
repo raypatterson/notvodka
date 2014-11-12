@@ -14,7 +14,7 @@ var _setOnceEventHandler = function(ref, cb) {
   });
 };
 
-var StateController = {
+var DatebaseController = {
 
   getInitialStateAsync: function(cb) {
 
@@ -23,7 +23,7 @@ var StateController = {
 
   addGame: function(game, cb) {
 
-    console.log('StateController.addGame', game);
+    console.log('DatebaseController.addGame', game);
 
     _setOnceEventHandler(fbGames, cb);
 
@@ -31,4 +31,4 @@ var StateController = {
   }
 };
 
-module.exports = StateController;
+module.exports = DatebaseController;
