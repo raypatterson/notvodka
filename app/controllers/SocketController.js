@@ -1,7 +1,7 @@
 var io = require('socket.io-client');
 var socket = io('http://localhost');
 
-var GameController = require('./GameController');
+var GameActions = require('../actions/GameActions');
 
 var SocketController = function(window) {
 
@@ -15,7 +15,7 @@ var SocketController = function(window) {
 
       // socket.emit('toc', data);
 
-      GameController.updateGameTime(data.time);
+      GameActions.time(data.time);
     });
   });
 };

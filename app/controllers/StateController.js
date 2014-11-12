@@ -23,7 +23,7 @@ var StateController = {
 
   addGame: function(game, cb) {
 
-    console.log('GameController.addGame', game);
+    console.log('StateController.addGame', game);
 
     _setOnceEventHandler(fbGames, cb);
 

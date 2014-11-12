@@ -35,25 +35,6 @@ var OPPONENT_MOVE_LIMIT = 2;
 //   }
 // };
 
-var _connectGameTic = function() {
-
-  console.log('GameController._connectGameTic()');
-
-  // socket.on('connect', function() {
-  //   console.log('connect');
-  //   socket.on('tic', function(data) {
-  //     console.log('tic', data);
-  //     socket.emit('toc', {
-  //       time: data
-  //     });
-
-  //     _state.activeGame.time = data.time;
-
-  //     GameActions.checkGame(_state);
-  //   });
-  // });
-};
-
 var _getNewGame = function() {
 
   var game = {
@@ -87,38 +68,34 @@ var _getGame = function() {
 
   var game = _activeGames.length === 0 ? _getNewGame() : _getActiveGame();
 
-  _connectGameTic();
-
   return game;
 };
 
 var GameController = {
 
-  setInitialState: function(state) {
+  // setInitialState: function(state) {
 
-    _state = {
-      games: state.games || [], // From Firebase
-      activeGame: _getGame(),
-      isGameActive: false,
-      isGamePlayed: false,
-      isGameComplete: false,
-      potentialMoves: MoveController.MOVE_LIST,
-      player: PlayerController.getPlayer()
-    };
+  //   _state = {
+  //     games: state.games || [], // From Firebase
+  //     activeGame: _getGame(),
+  //     isGameActive: false,
+  //     isGamePlayed: false,
+  //     isGameComplete: false,
+  //     potentialMoves: MoveController.MOVE_LIST,
+  //     player: PlayerController.getPlayer()
+  //   };
 
-    GameActions.initGame(_state);
-  },
+  //   GameActions.initGame(_state);
+  // },
 
   getState: function() {
 
     return _state;
   },
 
-  updateGameTime: function(time) {
+  getGame: function() {
 
-    _state.activeGame.time = time;
-
-    GameActions.checkGame(_state);
+    return _getGame();
   },
 
   updatePlayerMove: function(moveType) {

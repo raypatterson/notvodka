@@ -48,15 +48,15 @@ var GameArena = React.createClass({
         );
       });
 
-      var width = this.state.activeGame.time ? (this.state.activeGame.time.progress * 100) : 0;
+      var width = this.state.time ? (this.state.time.progress * 100) : 0;
 
       var statusStyle = {
         width: width + "%"
       };
 
       var progressMessage = function(state) {
-        if (state.activeGame.time) {
-          return <p className="h5">A new game will begin in {state.activeGame.time.seconds} seconds</p>;
+        if (state.time) {
+          return <p className="h5">A new game will begin in {state.time.seconds} seconds</p>;
         } else {
           return null;
         }

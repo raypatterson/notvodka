@@ -1,11 +1,12 @@
 var Reflux = require('reflux');
 
 var GameActions = Reflux.createActions([
-  'initGame',
-  'startGame',
-  'playGame',
-  'checkGame',
-  'scoreGame',
+  'init',
+  'time',
+  'start',
+  'play',
+  'check',
+  'score',
 ]);
 
 module.exports = GameActions;

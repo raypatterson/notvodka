@@ -5,7 +5,8 @@
 var React = require('react');
 
 var GameApp = require('./components/GameApp.jsx');
-var GameController = require('./controllers/GameController');
+
+var GameActions = require('./actions/GameActions');
 
 var App = React.createClass({
 
@@ -13,7 +14,9 @@ var App = React.createClass({
 
     // 'state' is loaded async in app.js
     // As good a place as any to init controller
-    GameController.setInitialState(this.props.state);
+    // GameController.setInitialState(this.props.state);
+
+    GameActions.init(this.props.state);
 
     return {};
   },
