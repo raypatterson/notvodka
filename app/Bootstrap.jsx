@@ -31,6 +31,6 @@ if (typeof window !== 'undefined') {
     );
 
     // Bind Socket event listeners
-    require('./controllers/SocketController')(window);
+    require('./controllers/SocketController')();
   }
 }
