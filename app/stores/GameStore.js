@@ -2,7 +2,7 @@ var request = require('superagent');
 
 var Reflux = require('reflux');
 
-var MoveController = require('../controllers/MoveController');
+var RequestController = require('../controllers/RequestController');
 
 var _state;
 
@@ -33,21 +33,7 @@ var GameStore = Reflux.createStore({
 
     // console.log('onMove');
 
-    var self = this;
-
-    request
-      .post('api/move')
-      .send({
-        moveType: moveType
-      })
-      .set('Accept', 'application/json')
-      .end(function(error, res) {
-
-        console.log('res', res);
-        // console.log('error', error);
-
-        self.trigger(_state);
-      });
+    RequestController.makePlayerMove(_state.player._id, moveType);
   }
 });
 

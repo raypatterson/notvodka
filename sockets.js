@@ -1,34 +1,17 @@
+var ArenaController = require('./app/controllers/ArenaController');
 var TimeController = require('./app/controllers/TimeController');
 
 var Sockets = function(io) {
 
-  var active = 0;
-
-  var callback = function(eventType, data) {
-    io.emit(eventType, data);
-  };
+  ArenaController.init(io);
 
   io.on('connection', function(socket) {
 
-    if (active === 0) {
-
-      TimeController.start(callback);
-    }
-
-    active += 1;
-
-    console.log(active + ' client sockets connected');
+    ArenaController.addPlayerClientSocket(socket);
 
     socket.on('disconnect', function() {
 
-      active -= 1;
-
-      console.log(active + ' client sockets connected');
-
-      if (active === 0) {
-
-        TimeController.stop();
-      }
+      ArenaController.removePlayerClientSocket(socket);
     });
   });
 };
