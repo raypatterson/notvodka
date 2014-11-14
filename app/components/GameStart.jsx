@@ -32,16 +32,12 @@ var GameStart = React.createClass({
 
       return (
 
-        <div className="row">
-          <div className={"col-md-12"}>
-            <button
-              type="button" 
-              className="btn btn-lg btn-default" 
-              onClick={this.onClick}>
-              Start a new game
-            </button>
-          </div>
-        </div>
+        <button
+          type="button" 
+          className="btn btn-lg btn-default" 
+          onClick={this.onClick}>
+          Start a new game
+        </button>
       )
     } else {
 

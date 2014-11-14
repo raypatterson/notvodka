@@ -3,21 +3,35 @@
  */
 
 var React = require('react');
+var Reflux = require('reflux');
+
+var GameStore = require('../stores/GameStore');
 
 var GameResult = React.createClass({
 
+  mixins: [Reflux.connect(GameStore)],
+
+  getInitialState: function() {
+
+    return GameStore.getInitialState();
+  },
+
   render: function() {
 
-    var results = this.props.results;
+    if (this.state.isGameComplete) {
 
-    return (
+      return (
 
-      <div>
-        <p>The correct answer was: <b>{results.answer.title}</b></p>
-        <p>You answered: <b>{results.move.title}</b></p>
-        <hr />
-      </div>
-    )
+        <div>
+          <p>The correct answer was: <b>{this.state.results.answer.title}</b></p>
+          <p>You answered: <b>{this.state.results.move.title}</b></p>
+          <hr />
+        </div>
+      )
+    } else {
+
+      return null;
+    }
   }
 });
 
