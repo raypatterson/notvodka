@@ -3,10 +3,10 @@ var _ = require('lodash');
 var MoveController = {
 
   MOVE_LIST: [{
-    type: '0',
+    _id: 'yes',
     title: 'Yes'
   }, {
-    type: '1',
+    _id: 'no',
     title: 'No'
   }],
 
@@ -15,10 +15,10 @@ var MoveController = {
     return this.MOVE_LIST[Math.floor(Math.random() * this.MOVE_LIST.length)];
   },
 
-  getMoveByType: function(type) {
+  getMoveById: function(id) {
 
     return _.find(this.MOVE_LIST, function(move) {
-      return move.type === type;
+      return move._id === id;
     });
   }
 };

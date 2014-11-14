@@ -3,12 +3,15 @@ var TIME_LIMIT = 1000 * 5;
 
 var _tic;
 
+var _onTic;
+var _onBzz;
+
 var _stop = function() {
 
   clearInterval(_tic);
 };
 
-var _start = function(cb, elapse) {
+var _start = function(elapse) {
 
   _tic = setInterval(function() {
 
@@ -21,9 +24,11 @@ var _start = function(cb, elapse) {
     } else {
 
       elapse = 0;
+
+      _onBzz();
     }
 
-    cb('tic', {
+    _onTic({
       time: {
         elapse: elapse,
         progress: elapse / TIME_LIMIT,
@@ -31,18 +36,21 @@ var _start = function(cb, elapse) {
       }
     });
 
-    _start(cb, elapse);
+    _start(elapse);
 
   }, TIME_INTERVAL);
 };
 
 var TimeController = {
 
-  start: function(cb) {
+  start: function(onTic, onBzz) {
 
     console.log('Starting tic');
 
-    _start(cb, 0);
+    _onTic = onTic;
+    _onBzz = onBzz;
+
+    _start(0);
   },
 
   stop: function() {

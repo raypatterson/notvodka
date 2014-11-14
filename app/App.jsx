@@ -6,10 +6,8 @@ var React = require('react');
 
 var GameStore = require('./stores/GameStore');
 
-var GameStart = require('./components/GameStart.jsx');
 var GameArena = require('./components/GameArena.jsx');
-var GamePlayed = require('./components/GamePlayed.jsx');
-var GameArchive = require('./components/GameArchive.jsx');
+var GamePodium = require('./components/GamePodium.jsx');
 
 var App = React.createClass({
 
@@ -29,10 +27,8 @@ var App = React.createClass({
             <h1>Is it Vodka?</h1>
           </div>
         </div>
-        <GameStart />
         <GameArena />
-        <GamePlayed />
-        <GameArchive />
+        <GamePodium />
       </div>
     );
   }

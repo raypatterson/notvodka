@@ -2,7 +2,9 @@ var Reflux = require('reflux');
 
 var GameActions = Reflux.createActions([
   'time',
-  'move'
+  'move',
+  'score',
+  'start'
 ]);
 
 module.exports = GameActions;

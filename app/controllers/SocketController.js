@@ -9,11 +9,16 @@ var SocketController = function() {
 
     socket.on('tic', function(data) {
 
-      // console.log('tic', data);
-
       // socket.emit('toc', data);
 
       GameActions.time(data.time);
+    });
+
+    socket.on('bzz', function(data) {
+
+      console.log('score', data);
+
+      GameActions.score(data);
     });
   });
 

@@ -7,9 +7,10 @@ var Reflux = require('reflux');
 
 var GameStore = require('../stores/GameStore');
 
+var GameStart = require('./GameStart.jsx');
 var GameResult = require('./GameResult.jsx');
 
-var GamePlayed = React.createClass({
+var GamePodium = React.createClass({
 
   mixins: [Reflux.connect(GameStore)],
 
@@ -26,7 +27,8 @@ var GamePlayed = React.createClass({
         <div className="row">
           <div className={"col-md-12"}>
             <h2 className="h3">Game Results</h2>
-            <GameResult key={this.state.activeGame._id} game={this.state.activeGame} player={this.state.player} />
+            <GameStart />
+            <GameResult results={this.state.results} />
           </div>
         </div>
       );
@@ -37,4 +39,4 @@ var GamePlayed = React.createClass({
   }
 });
 
-module.exports = GamePlayed;
+module.exports = GamePodium;

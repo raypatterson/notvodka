@@ -21,7 +21,7 @@ var GameStart = React.createClass({
 
     event.preventDefault();
 
-    GameActions.startGame();
+    GameActions.start();
 
     return false;
   },

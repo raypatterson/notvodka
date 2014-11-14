@@ -1,20 +1,45 @@
+_ = require('lodash');
+
 var TimeController = require('./TimeController');
 var DatabaseController = require('./DatabaseController');
 var GameController = require('./GameController');
 var PlayerController = require('./PlayerController');
 var MoveController = require('./MoveController');
+var DataController = require('./DataController');
 
-var _players = 0;
-var _io;
+var _connected = 0;
+var _players;
+var _io; // Socket.io
 
-var _emitSocketEvent = function(eventType, data) {
-  _io.emit(eventType, data);
+var _onTic = function(data) {
+  _io.emit('tic', data);
+};
+
+var _onBzz = function() {
+
+  _players = PlayerController.getActivePlayers();
+
+  if (_players.length > 0) {
+
+    _.each(GameController.getGames(_players), function(game) {
+
+      _.each(game.players, function(playerDTO) {
+
+        if (playerDTO.socket) { // Not a dummy move
+
+          playerDTO.socket.emit('bzz', playerDTO.moveDTO);
+        }
+      });
+    });
+
+    // Clear
+    PlayerController.clearActivePlayers();
+  }
 };
 
 var ArenaController = {
 
   init: function(io) {
-    console.log('ArenaController.init');
     _io = io;
   },
 
@@ -22,6 +47,7 @@ var ArenaController = {
 
     DatabaseController.getInitialStateAsync(function(state) {
 
+      state.isGamePlayed = false;
       state.player = PlayerController.getPlayer();
       state.potentialMoves = MoveController.MOVE_LIST;
 
@@ -31,24 +57,23 @@ var ArenaController = {
 
   addPlayerClientSocket: function(socket) {
 
-    if (_players++ === 0) {
+    if (_connected++ === 0) {
 
-      TimeController.start(_emitSocketEvent);
+      TimeController.start(_onTic, _onBzz);
     }
 
     console.log('Player ' + socket.id + ' connected');
-    console.log(_players + ' player(s) connected');
+    console.log(_connected + ' player(s) connected');
 
-    socket.on('move', function(data) {
-      console.log('socket id', socket.id);
-      console.log('move type', data.moveType);
-      console.log('from player', data.playerId);
+    socket.on('move', function(moveDTO) {
+
+      PlayerController.addActivePlayer(moveDTO, socket);
     });
   },
 
   removePlayerClientSocket: function(socket) {
 
-    if (--_players === 0) {
+    if (--_connected === 0) {
 
       TimeController.stop();
     }
@@ -56,19 +81,7 @@ var ArenaController = {
     socket.removeAllListeners();
 
     console.log('Player ' + socket.id + ' disconnected');
-    console.log(_players + ' player(s) connected');
-  },
-
-  getPlayerMove: function(playerId, moveType) {
-
-    var move = MoveController.getMoveByType(moveType);
-
-    var game = GameController.getGame();
-
-    return {
-      move: move,
-      game: game
-    };
+    console.log(_connected + ' player(s) connected');
   }
 };
 

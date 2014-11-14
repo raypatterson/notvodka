@@ -1,8 +1,6 @@
-var Firebase = require('firebase');
-var fb = new Firebase('https://isitvodka.firebaseio.com/');
-var fbPlayers = fb.child('players');
+var DataController = require('./DataController');
 
-var _players = [];
+var _active = [];
 
 var PlayerController = {
 
@@ -11,6 +9,21 @@ var PlayerController = {
     return {
       _id: Date.now()
     }
+  },
+
+  addActivePlayer: function(moveDTO, socket) {
+
+    _active.push(DataController.getPlayerDTO(moveDTO, socket));
+  },
+
+  getActivePlayers: function() {
+
+    return _active.slice(0);
+  },
+
+  clearActivePlayers: function() {
+
+    _active.splice(0);
   }
 };
 

@@ -21,7 +21,7 @@ var GameArena = React.createClass({
 
     event.preventDefault();
 
-    GameActions.move(event.target.dataset.type);
+    GameActions.move(event.target.dataset.id);
 
     return false;
   },
@@ -36,14 +36,16 @@ var GameArena = React.createClass({
 
       var self = this;
 
+      var buttonClasses = "btn btn-lg btn-default" + (self.state.isGamePlayed ? " disabled" : "");
+
       var moveButtons = this.state.potentialMoves.map(function(option) {
         return (
           <button 
-            data-type={option.type} 
-            key={option.type} 
+            data-id={option._id} 
+            key={option._id} 
             onClick={self.onClick} 
             type="button" 
-            className="btn btn-lg btn-default"
+            className={buttonClasses}
             >{option.title}</button>
         );
       });
@@ -56,7 +58,11 @@ var GameArena = React.createClass({
 
       var progressMessage = function(state) {
         if (state.time) {
-          return <p className="h5">A new game will begin in {state.time.seconds} seconds</p>;
+          if (state.isGamePlayed) {
+            return <p>You game will complete in {state.time.seconds} seconds</p>;
+          } else {
+            return <p>A new game will begin in {state.time.seconds} seconds</p>;
+          }
         } else {
           return null;
         }

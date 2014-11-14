@@ -1,40 +1,61 @@
-var PlayerController = require('./PlayerController');
+_ = require('lodash');
+
 var MoveController = require('./MoveController');
+var DataController = require('./DataController');
 
-_games = [];
+var MOVE_LIMIT = 3;
 
-var _getNew = function() {
+var _getGame = function() {
 
   var game = {
     _id: Date.now(),
-    correctMove: MoveController.getRandomMove(),
-    playerMoves: []
+    answer: {
+      _id: MoveController.getRandomMove()._id
+    },
+    players: []
   };
-
-  _games.push(game);
 
   return game;
 };
 
-var _getActive = function() {
-
-  var i, game;
-
-  for (i in _games) {
-    game = _games[i];
-    if (game.playerMoves.length < 3) {
-      return game;
-    }
-  };
-
-  return _getNew();
-};
-
 var GameController = {
 
-  getGame: function() {
+  getGames: function(players) {
 
-    return _games.length === 0 ? _getNew() : _getActive();
+    var games = [];
+    var playerDTO;
+
+    // Fill in with dummy players
+    while ((players.length % MOVE_LIMIT) !== 0) {
+      players.push(DataController.getPlayerDTO(DataController.getMoveDTO(MoveController.getRandomMove()._id)));
+    };
+
+    // Why not?
+    players = _.shuffle(players);
+
+    while (players.length > 0) {
+
+      game = _getGame();
+
+      while (game.players.length < MOVE_LIMIT) {
+
+        playerDTO = players.pop();
+
+        playerDTO.moveDTO.game = {
+          _id: game._id
+        };
+
+        playerDTO.moveDTO.answer = {
+          _id: game.answer._id
+        };
+
+        game.players.push(playerDTO);
+      }
+
+      games.push(game);
+    }
+
+    return games;
   }
 };
 
