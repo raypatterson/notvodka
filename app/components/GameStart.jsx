@@ -21,7 +21,7 @@ var GameStart = React.createClass({
 
     event.preventDefault();
 
-    GameActions.start();
+    GameActions.playAgain();
 
     return false;
   },
@@ -33,8 +33,8 @@ var GameStart = React.createClass({
       return (
 
         <button
-          type="button" 
           className="btn btn-lg btn-default" 
+          type="button" 
           onClick={this.onClick}>
           Start a new game
         </button>

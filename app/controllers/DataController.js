@@ -12,6 +12,18 @@ var DataController = {
     };
   },
 
+  getSignDTO: function(signId, playerId) {
+
+    return {
+      sign: {
+        _id: signId
+      },
+      player: {
+        _id: playerId
+      }
+    };
+  },
+
   getPlayerDTO: function(moveDTO, socket) {
     return {
       moveDTO: moveDTO,

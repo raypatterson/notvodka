@@ -1,10 +1,11 @@
 var Reflux = require('reflux');
 
 var GameActions = Reflux.createActions([
-  'time',
-  'move',
-  'score',
-  'start'
+  'gameTic',
+  'playerMove',
+  'scoreResults',
+  'playAgain',
+  'playerLogin'
 ]);
 
 module.exports = GameActions;

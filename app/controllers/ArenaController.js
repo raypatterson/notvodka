@@ -37,6 +37,20 @@ var _onBzz = function() {
   }
 };
 
+var _checkConnection = function(connected) {
+
+  _connected = connected;
+
+  if (_connected === 0) {
+
+    TimeController.start(_onTic, _onBzz);
+
+  } else {
+
+    TimeController.stop();
+  }
+};
+
 var ArenaController = {
 
   init: function(io) {
@@ -57,6 +71,8 @@ var ArenaController = {
 
   addPlayerClientSocket: function(socket) {
 
+    _checkConnection(_connected++);
+
     if (_connected++ === 0) {
 
       TimeController.start(_onTic, _onBzz);
@@ -65,9 +81,20 @@ var ArenaController = {
     console.log('Player ' + socket.id + ' connected');
     console.log(_connected + ' player(s) connected');
 
-    socket.on('move', function(moveDTO) {
+    socket.on('move', function(dto, cb) {
 
-      PlayerController.addActivePlayer(moveDTO, socket);
+      console.log('dto', dto);
+
+      PlayerController.addActivePlayer(dto, socket);
+
+      cb(dto);
+    });
+
+    socket.on('login', function(dto, cb) {
+
+      console.log('dto', dto);
+
+      cb(dto);
     });
   },
 

@@ -11,22 +11,22 @@ var SocketController = function() {
 
       // socket.emit('toc', data);
 
-      GameActions.time(data.time);
+      GameActions.gameTic(data.time);
     });
 
     socket.on('bzz', function(data) {
 
       console.log('score', data);
 
-      GameActions.score(data);
+      GameActions.scoreResults(data);
     });
   });
 
   return {
 
-    emit: function(eventType, data) {
+    emit: function(eventType, data, cb) {
 
-      socket.emit(eventType, data);
+      socket.emit(eventType, data, cb);
     }
   };
 };

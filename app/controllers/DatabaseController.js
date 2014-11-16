@@ -1,5 +1,5 @@
 var Firebase = require('firebase');
-var fb = new Firebase('https://isitvodka.firebaseio.com/');
+var fb = new Firebase('https://notvodka.firebaseio.com/');
 var fbGames = fb.child('games');
 
 var _setOnceEventHandler = function(ref, cb) {

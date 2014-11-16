@@ -25,6 +25,7 @@
     "reflux": "^0.1.13",
     "socket.io": "^1.2.0",
     "socket.io-client": "^1.2.0",
+    "store": "^1.3.16",
     "superagent": "^0.20.0"
   },
   "devDependencies": {

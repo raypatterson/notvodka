@@ -7,12 +7,15 @@ var DataController = require('../controllers/DataController');
 var MoveController = require('../controllers/MoveController');
 
 var _state;
+var _self;
 
 var GameStore = Reflux.createStore({
 
   listenables: require('../actions/GameActions'),
 
   setInitialState: function(state) {
+
+    _self = this;
 
     _state = state;
   },
@@ -22,29 +25,36 @@ var GameStore = Reflux.createStore({
     return _state;
   },
 
-  onTime: function(time) {
+  onGameTic: function(time) {
 
-    // console.log('onTime');
+    // console.log('onGameTic');
 
     _state.time = time;
 
-    this.trigger(_state);
+    _self.trigger(_state);
   },
 
-  onMove: function(id) {
+  onPlayerMove: function(id) {
 
-    // console.log('onMove');
+    console.log('onPlayerMove');
 
-    SocketController.emit('move', DataController.getMoveDTO(id, _state.player._id));
+    var dto = DataController.getMoveDTO(id, _state.player._id);
 
-    _state.isGamePlayed = true;
+    var cb = function(data) {
 
-    this.trigger(_state);
+      console.log('onPlayerMove.cb', data);
+
+      _state.isGamePlayed = true;
+
+      _self.trigger(_state);
+    };
+
+    SocketController.emit('move', dto, cb);
   },
 
-  onScore: function(score) {
+  onScoreResults: function(score) {
 
-    console.log('onScore');
+    console.log('onScoreResults');
 
     _state.results = {
       move: MoveController.getMoveById(score.move._id),
@@ -54,17 +64,32 @@ var GameStore = Reflux.createStore({
 
     _state.isGameComplete = true;
 
-    this.trigger(_state);
+    _self.trigger(_state);
   },
 
-  onStart: function() {
+  onPlayAgain: function() {
 
-    console.log('onStart');
+    console.log('onPlayAgain');
 
     _state.isGamePlayed = false;
     _state.isGameComplete = false;
 
-    this.trigger(_state);
+    _self.trigger(_state);
+  },
+
+  onPlayerLogin: function(name) {
+
+    console.log('onPlayerLogin', name);
+
+    var dto = DataController.getSignDTO(name, _state.player._id);
+
+    var cb = function(data) {
+      console.log('onPlayerLogin.cb', data);
+
+      _self.trigger(_state);
+    };
+
+    SocketController.emit('login', dto, cb);
   }
 });
 

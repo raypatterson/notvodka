@@ -21,7 +21,7 @@ var GameArena = React.createClass({
 
     event.preventDefault();
 
-    GameActions.move(event.target.dataset.id);
+    GameActions.playerMove(event.target.dataset.id);
 
     return false;
   },
