@@ -1,3 +1,5 @@
+'use strict';
+
 var DataController = {
 
   getMoveDTO: function(moveId, playerId) {

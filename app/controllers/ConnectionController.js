@@ -1,3 +1,5 @@
+'use strict';
+
 var ConnectionController = function() {
 
   var _check = function() {

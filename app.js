@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -28,8 +30,6 @@ app.use(require('connect-livereload')({
 
 // Routes
 app.get('/', routes.index);
-
-app.post('/api/move', routes.api.move);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,3 +1,5 @@
+'use strict';
+
 var DataController = require('./DataController');
 
 var _active = [];

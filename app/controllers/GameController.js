@@ -1,4 +1,6 @@
-_ = require('lodash');
+'use strict';
+
+var _ = require('lodash');
 
 var MoveController = require('./MoveController');
 var DataController = require('./DataController');
@@ -23,6 +25,7 @@ var GameController = {
   getGames: function(players) {
 
     var games = [];
+    var game;
     var playerDTO;
 
     // Fill in with dummy players

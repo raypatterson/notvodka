@@ -1,3 +1,5 @@
+'use strict';
+
 var ArenaController = require('./app/controllers/ArenaController');
 var TimeController = require('./app/controllers/TimeController');
 

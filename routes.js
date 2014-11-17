@@ -1,3 +1,5 @@
+'use strict';
+
 var React = require('react');
 
 //For requiring `.jsx` files as Node modules
@@ -36,19 +38,6 @@ var Routes = {
         })
       });
     });
-  },
-
-  api: {
-
-    move: function(req, res) {
-
-      if (!req.body.hasOwnProperty('moveType')) {
-        res.statusCode = 400;
-        return res.send('Error 400: Post syntax incorrect.');
-      }
-
-      res.json(ArenaController.getPlayerMove(req.body.moveType));
-    }
   }
 };
 

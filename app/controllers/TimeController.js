@@ -1,3 +1,5 @@
+'use strict';
+
 var TIME_INTERVAL = 1000;
 var TIME_LIMIT = 1000 * 5;
 

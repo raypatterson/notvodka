@@ -1,3 +1,5 @@
+'use strict';
+
 var Firebase = require('firebase');
 var fb = new Firebase('https://notvodka.firebaseio.com/');
 var fbGames = fb.child('games');

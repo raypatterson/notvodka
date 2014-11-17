@@ -1,4 +1,6 @@
-_ = require('lodash');
+'use strict';
+
+var _ = require('lodash');
 
 var TimeController = require('./TimeController');
 var DatabaseController = require('./DatabaseController');
@@ -6,6 +8,7 @@ var GameController = require('./GameController');
 var PlayerController = require('./PlayerController');
 var MoveController = require('./MoveController');
 var DataController = require('./DataController');
+
 
 var _connected = 0;
 var _players;

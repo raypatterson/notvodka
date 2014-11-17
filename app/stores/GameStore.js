@@ -1,3 +1,5 @@
+'use strict';
+
 var request = require('superagent');
 
 var Reflux = require('reflux');
