@@ -16,6 +16,8 @@ var GamePodium = React.createClass({
 
   render: function() {
 
+    console.log('GamePodium.render');
+
     return (
       <div className="row">
         <div className={"col-md-12"}>

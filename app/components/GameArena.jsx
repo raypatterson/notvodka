@@ -30,6 +30,8 @@ var GameArena = React.createClass({
 
   render: function() {
 
+    console.log('GameArena.render');
+
     if (this.state.isGameComplete) {
 
       return null;

@@ -2,18 +2,26 @@
 
 var Firebase = require('firebase');
 var fb = new Firebase('https://notvodka.firebaseio.com/');
-var fbGames = fb.child('games');
+var fbGames = fb.child('games').push();
+var fbPlayers = fb.child('players').push();;
 
-var _setOnceEventHandler = function(ref, cb) {
+var _setOnceEventHandler = function(ref, cb, data) {
 
   ref.once('value', function(state) {
 
-    cb(state.val());
+    console.log('FB key', state.key());
+    console.log('FB val', state.val());
+
+    cb(state.val(), state.key());
 
   }, function(error) {
 
     console.log('WUHWUHWUHwuhwuh wuh wuh  wuh  wuh  wuuuuuhhhhh' + error.code);
   });
+
+  if (data) {
+    ref.set(data);
+  }
 };
 
 var DatabaseController = {
@@ -27,9 +35,14 @@ var DatabaseController = {
 
     console.log('DatabaseController.addGame', game);
 
-    _setOnceEventHandler(fbGames, cb);
+    _setOnceEventHandler(fbGames, cb, game);
+  },
 
-    fbGames.push(game);
+  addPlayer: function(player, cb) {
+
+    console.log('DatabaseController.addPlayer', player);
+
+    _setOnceEventHandler(fbPlayers, cb, player);
   }
 };
 

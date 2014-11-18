@@ -13,31 +13,55 @@ var GameStore = require('./app/stores/GameStore');
 
 var ArenaController = require('./app/controllers/ArenaController');
 
+var url = require('url');
+
 var Routes = {
 
-  index: function(req, res) {
+  default: function(req, res) {
+    // Redirect to default route
+    res.redirect('/arena');
+  },
 
-    ArenaController.getInitialStateAsync(function(state) {
+  podium: function(req, res) {
 
-      // Render ./app/views/index
-      res.render('index', {
+    // res.send(true);
+  },
 
-        // Render markup with React
-        markup: React.renderComponentToString(App({
+  arena: function(req, res) {
 
-          // Seed App view with state for 
-          // all other views on _server_
-          state: state
-        })),
+    try {
 
-        // Pass state to template so it
-        // may be retrieved for rendering
-        // views on _client_ (./app/Bootstrap)
-        data: JSON.stringify({
-          state: state
-        })
+      ArenaController.getInitialStateAsync(function(state) {
+
+        // Get path for router
+        var path = url.parse(req.url).pathname;
+
+        // Render ./app/views/index
+        res.render('index', {
+
+          // Render markup with React
+          markup: React.renderToString(App({
+
+            // Seed App view with state for 
+            // all other views on _server_
+            state: state,
+            path: path
+          })),
+
+          // Pass state to template so it
+          // may be retrieved for rendering
+          // views on _client_ (./app/Bootstrap)
+          data: JSON.stringify({
+            state: state,
+            path: path
+          })
+        });
       });
-    });
+
+    } catch (err) {
+
+      return next(err);
+    }
   }
 };
 

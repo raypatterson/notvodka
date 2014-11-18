@@ -1,7 +1,5 @@
 'use strict';
 
-var request = require('superagent');
-
 var Reflux = require('reflux');
 
 var SocketController = require('../controllers/SocketController')();
@@ -67,6 +65,11 @@ var GameStore = Reflux.createStore({
     _state.isGameComplete = true;
 
     _self.trigger(_state);
+
+    if (typeof window !== 'undefined') {
+      console.log('window.location', window.location);
+
+    }
   },
 
   onPlayAgain: function() {
@@ -79,13 +82,14 @@ var GameStore = Reflux.createStore({
     _self.trigger(_state);
   },
 
-  onPlayerLogin: function(name) {
+  onPlayerLogin: function(playerName) {
 
-    console.log('onPlayerLogin', name);
+    console.log('onPlayerLogin', playerName);
 
-    var dto = DataController.getSignDTO(name, _state.player._id);
+    var dto = DataController.getLoginDTO(playerName, _state.player._id);
 
     var cb = function(data) {
+
       console.log('onPlayerLogin.cb', data);
 
       _self.trigger(_state);

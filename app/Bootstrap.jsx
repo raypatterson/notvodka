@@ -20,13 +20,14 @@ if (typeof window !== 'undefined') {
 
     // Or not... 
     var state = data ? data.state : {};
+    var path = data ? data.path : '/';
 
     // Render component view with React
     React.renderComponent(
 
       // Seed App view with state for 
       // all other views on _client_
-      <App state={state} />,
+      <App state={state} path={path} />,
 
       // Bind to DOM
       document.getElementById('game-app')

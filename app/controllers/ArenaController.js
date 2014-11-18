@@ -90,7 +90,12 @@ var ArenaController = {
 
       console.log('dto', dto);
 
-      cb(dto);
+      DatabaseController.addPlayer(dto, function(data) {
+
+        console.log('database', data);
+
+        cb(dto);
+      });
     });
   },
 

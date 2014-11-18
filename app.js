@@ -29,7 +29,9 @@ app.use(require('connect-livereload')({
 }));
 
 // Routes
-app.get('/', routes.index);
+app.get('/arena', routes.arena);
+app.get('/podium', routes.podium);
+app.get('/', routes.default);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

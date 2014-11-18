@@ -14,15 +14,11 @@ var DataController = {
     };
   },
 
-  getSignDTO: function(signId, playerId) {
+  getLoginDTO: function(playerName, playerId) {
 
     return {
-      sign: {
-        _id: signId
-      },
-      player: {
-        _id: playerId
-      }
+      _id: playerId,
+      name: playerName
     };
   },
 
