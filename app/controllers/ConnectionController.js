@@ -1,39 +1,35 @@
 'use strict';
 
-var ConnectionController = function() {
+var _connections = 0;
+var _onActive;
+var _onInactive;
 
-  var _check = function() {
+var ConnectionController = {
 
-    if (_connected++ === 0) {
+  init: function(onActive, onInactive) {
 
-      TimeController.start(_onTic, _onBzz);
+    _onActive = onActive;
+    _onInactive = onInactive;
+  },
 
-    } else {
+  add: function() {
 
-      TimeController.stop();
-    }
-  };
+    if (_connections++ === 0) {
 
-  return {
-
-    add: function() {
-
-      _connected++;
-
-      this.check();
+      _onActive(_connections);
     }
 
-    remove: function() {
+    console.log(_connections + ' connections');
+  },
 
-      if (--_connected === 0) {
+  remove: function() {
 
-        TimeController.start(_onTic, _onBzz);
+    if (--_connections === 0) {
 
-      } else {
-
-
-      }
+      _onInactive(_connections);
     }
+
+    console.log(_connections + ' connections');
   }
 };
 

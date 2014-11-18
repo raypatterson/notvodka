@@ -45,12 +45,16 @@ var _start = function(elapse) {
 
 var TimeController = {
 
-  start: function(onTic, onBzz) {
-
-    console.log('Starting tic');
+  init: function(onTic, onBzz) {
 
     _onTic = onTic;
     _onBzz = onBzz;
+
+  },
+
+  start: function() {
+
+    console.log('Starting tic');
 
     _start(0);
   },

@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 
+var ConnectionController = require('./ConnectionController');
 var TimeController = require('./TimeController');
 var DatabaseController = require('./DatabaseController');
 var GameController = require('./GameController');
@@ -9,8 +10,6 @@ var PlayerController = require('./PlayerController');
 var MoveController = require('./MoveController');
 var DataController = require('./DataController');
 
-
-var _connected = 0;
 var _players;
 var _io; // Socket.io
 
@@ -40,24 +39,25 @@ var _onBzz = function() {
   }
 };
 
-var _checkConnection = function(connected) {
+var _onConnectionAdded = function(connections) {
 
-  _connected = connected;
+  TimeController.start();
+};
 
-  if (_connected === 0) {
+var _onConnectionRemoved = function(connections) {
 
-    TimeController.start(_onTic, _onBzz);
-
-  } else {
-
-    TimeController.stop();
-  }
+  TimeController.stop();
 };
 
 var ArenaController = {
 
   init: function(io) {
+
     _io = io;
+
+    TimeController.init(_onTic, _onBzz);
+
+    ConnectionController.init(_onConnectionAdded, _onConnectionRemoved);
   },
 
   getInitialStateAsync: function(cb) {
@@ -65,6 +65,7 @@ var ArenaController = {
     DatabaseController.getInitialStateAsync(function(state) {
 
       state.isGamePlayed = false;
+      state.isGameComplete = false;
       state.player = PlayerController.getPlayer();
       state.potentialMoves = MoveController.MOVE_LIST;
 
@@ -74,15 +75,7 @@ var ArenaController = {
 
   addPlayerClientSocket: function(socket) {
 
-    _checkConnection(_connected++);
-
-    if (_connected++ === 0) {
-
-      TimeController.start(_onTic, _onBzz);
-    }
-
-    console.log('Player ' + socket.id + ' connected');
-    console.log(_connected + ' player(s) connected');
+    ConnectionController.add();
 
     socket.on('move', function(dto, cb) {
 
@@ -103,15 +96,9 @@ var ArenaController = {
 
   removePlayerClientSocket: function(socket) {
 
-    if (--_connected === 0) {
-
-      TimeController.stop();
-    }
+    ConnectionController.remove();
 
     socket.removeAllListeners();
-
-    console.log('Player ' + socket.id + ' disconnected');
-    console.log(_connected + ' player(s) connected');
   }
 };
 
