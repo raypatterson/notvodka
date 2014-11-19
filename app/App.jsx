@@ -6,6 +6,10 @@
 
 var React = require('react');
 
+// var Router = require('react-router-component');
+// var Locations = Router.Locations;
+// var Location = Router.Location;
+
 var GameStore = require('./stores/GameStore');
 
 var GameArena = require('./components/GameArena.jsx');
@@ -22,6 +26,8 @@ var App = React.createClass({
 
   render: function() {
 
+    console.log('this.props.path', this.props.path);
+
     return (
       <div className="game-container">
         <div className="row header">
@@ -29,8 +35,6 @@ var App = React.createClass({
             <h1>Is it Vodka?</h1>
           </div>
         </div>
-        <GameArena />
-        <GamePodium />
       </div>
     );
   }

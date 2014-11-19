@@ -23,7 +23,7 @@ if (typeof window !== 'undefined') {
     var path = data ? data.path : '/';
 
     // Render component view with React
-    React.renderComponent(
+    React.render(
 
       // Seed App view with state for 
       // all other views on _client_
