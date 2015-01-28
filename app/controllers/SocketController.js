@@ -1,15 +1,25 @@
 'use strict';
 
-var io = require('socket.io-client');
-var socket = io('http://localhost');
+var logger = require('../utils/logger')('SocketController');
+
+var CONNECT_EVENT = 'open';
+var DISCONNECT_EVENT = 'close';
+
+var socket = require('engine.io-client')('http://localhost:8000');
 
 var GameActions = require('../actions/GameActions');
 
 var SocketController = function() {
 
-  socket.on('connect', function() {
+  logger.debug('SocketController');
+
+  socket.on(CONNECT_EVENT, function() {
+
+    logger.debug(CONNECT_EVENT);
 
     socket.on('tic', function(data) {
+
+      logger.debug(CONNECT_EVENT);
 
       // socket.emit('toc', data);
 
@@ -18,10 +28,15 @@ var SocketController = function() {
 
     socket.on('bzz', function(data) {
 
-      console.log('score', data);
+      logger.debug('score', data);
 
       GameActions.scoreResults(data);
     });
+  });
+
+  socket.on(DISCONNECT_EVENT, function() {
+
+    logger.debug(DISCONNECT_EVENT);
   });
 
   return {

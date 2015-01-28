@@ -14,11 +14,6 @@ var GameResult = React.createClass({
 
   mixins: [Reflux.connect(GameStore)],
 
-  getInitialState: function() {
-
-    return GameStore.getInitialState();
-  },
-
   onSubmit: function(e) {
 
     e.preventDefault();

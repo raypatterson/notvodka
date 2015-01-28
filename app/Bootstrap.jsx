@@ -6,6 +6,7 @@
 
 var React = require('react');
 
+// var App = React.createFactory(require('./App.jsx'));
 var App = require('./App.jsx');
 
 var GameStore = require('./stores/GameStore');
@@ -21,13 +22,14 @@ if (typeof window !== 'undefined') {
     // Or not... 
     var state = data ? data.state : {};
     var path = data ? data.path : '/';
+    var history = data ? data.history : '/';
 
     // Render component view with React
     React.render(
 
       // Seed App view with state for 
       // all other views on _client_
-      <App state={state} path={path} />,
+      <App state={state} path={path} history={history} />,
 
       // Bind to DOM
       document.getElementById('game-app')

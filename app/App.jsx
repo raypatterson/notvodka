@@ -5,10 +5,9 @@
 'use strict';
 
 var React = require('react');
+var Reflux = require('reflux');
 
-// var Router = require('react-router-component');
-// var Locations = Router.Locations;
-// var Location = Router.Location;
+var RouterMixin = require('react-mini-router').RouterMixin;
 
 var GameStore = require('./stores/GameStore');
 
@@ -17,16 +16,21 @@ var GamePodium = require('./components/GamePodium.jsx');
 
 var App = React.createClass({
 
+  mixins: [RouterMixin],
+
   getInitialState: function() {
 
     GameStore.setInitialState(this.props.state);
 
-    return {};
+    return null;
+  },
+
+  routes: {
+    '/arena': 'arena',
+    '/podium': 'podium'
   },
 
   render: function() {
-
-    console.log('this.props.path', this.props.path);
 
     return (
       <div className="game-container">
@@ -35,8 +39,19 @@ var App = React.createClass({
             <h1>Is it Vodka?</h1>
           </div>
         </div>
+        {this.renderCurrentRoute()}
       </div>
     );
+  },
+
+  arena: function arena() {
+
+    return <GameArena />;
+  },
+
+  podium: function podium() {
+
+    return <GamePodium />;
   }
 });
 

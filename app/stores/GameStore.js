@@ -1,6 +1,7 @@
 'use strict';
 
 var Reflux = require('reflux');
+var navigate = require('react-mini-router').navigate;
 
 var SocketController = require('../controllers/SocketController')();
 var DataController = require('../controllers/DataController');
@@ -27,7 +28,7 @@ var GameStore = Reflux.createStore({
 
   onGameTic: function(time) {
 
-    // console.log('onGameTic');
+    // console.log('GameStore.onGameTic');
 
     _state.time = time;
 
@@ -36,13 +37,13 @@ var GameStore = Reflux.createStore({
 
   onPlayerMove: function(id) {
 
-    console.log('onPlayerMove');
+    console.log('GameStore.onPlayerMove');
 
     var dto = DataController.getMoveDTO(id, _state.player._id);
 
     var cb = function(data) {
 
-      console.log('onPlayerMove.cb', data);
+      console.log('GameStore.onPlayerMove.cb', data);
 
       _state.isGamePlayed = true;
 
@@ -54,7 +55,7 @@ var GameStore = Reflux.createStore({
 
   onScoreResults: function(score) {
 
-    console.log('onScoreResults');
+    console.log('GameStore.onScoreResults');
 
     _state.results = {
       move: MoveController.getMoveById(score.move._id),
@@ -66,15 +67,12 @@ var GameStore = Reflux.createStore({
 
     _self.trigger(_state);
 
-    if (typeof window !== 'undefined') {
-      console.log('window.location', window.location);
-
-    }
+    navigate('/podium');
   },
 
   onPlayAgain: function() {
 
-    console.log('onPlayAgain');
+    console.log('GameStore.onPlayAgain');
 
     _state.isGamePlayed = false;
     _state.isGameComplete = false;
@@ -84,13 +82,13 @@ var GameStore = Reflux.createStore({
 
   onPlayerLogin: function(playerName) {
 
-    console.log('onPlayerLogin', playerName);
+    console.log('GameStore.onPlayerLogin', playerName);
 
     var dto = DataController.getLoginDTO(playerName, _state.player._id);
 
     var cb = function(data) {
 
-      console.log('onPlayerLogin.cb', data);
+      console.log('GameStore.onPlayerLogin.cb', data);
 
       _self.trigger(_state);
     };

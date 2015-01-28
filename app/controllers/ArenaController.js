@@ -14,6 +14,7 @@ var _players;
 var _io; // Socket.io
 
 var _onTic = function(data) {
+
   _io.emit('tic', data);
 };
 

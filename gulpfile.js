@@ -9,7 +9,6 @@ var webpack = require('gulp-webpack');
 var autoprefixer = require('autoprefixer-core');
 var runSequence = require('run-sequence');
 
-
 gulp.task('default', function() {
   runSequence('clean', 'nodemon', 'webpack', 'livereload', 'open');
 });
