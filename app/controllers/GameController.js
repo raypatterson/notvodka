@@ -3,7 +3,7 @@
 var _ = require('lodash');
 
 var MoveController = require('./MoveController');
-var DataController = require('./DataController');
+var PlayerController = require('./PlayerController');
 
 var MOVE_LIMIT = 3;
 
@@ -30,7 +30,7 @@ var GameController = {
 
     // Fill in with dummy players
     while ((players.length % MOVE_LIMIT) !== 0) {
-      players.push(DataController.getPlayerDTO(DataController.getMoveDTO(MoveController.getRandomMove()._id)));
+      players.push(PlayerController.createPlayerDTO(PlayerController.createMoveDTO(MoveController.getRandomMove()._id)));
     };
 
     // Why not?

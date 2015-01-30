@@ -1,15 +1,18 @@
 #!/usr/bin/env node
 
-var debug = require('debug')('DevMag');
+var logger = require('../app/utils/logger')('www');
+
+var appRoot = require('app-root-path');
+
 var app = require('../app');
 
 app.set('port', process.env.PORT || 8000);
 
-var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
+var appServer = app.listen(app.get('port'), function() {
+  logger.info('Express appServer listening on port ' + appServer.address().port);
 });
 
 // Sockets
-server.listen(server.address().port);
-var io = require('socket.io')(server);
-var sockets = require('../sockets')(io);
+appServer.listen(appServer.address().port);
+
+require('../app/io/Server').init(require('engine.io')(appServer));

@@ -7,8 +7,6 @@
 var React = require('react');
 var Reflux = require('reflux');
 
-var GameStore = require('../stores/GameStore');
-
 var GameStart = require('./GameStart.jsx');
 var GameResult = require('./GameResult.jsx');
 

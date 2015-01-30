@@ -5,9 +5,11 @@ var Reflux = require('reflux');
 var GameActions = Reflux.createActions([
   'gameTic',
   'playerMove',
+  'playerMoveComplete',
+  'playerLogin',
+  'playerLoginComplete',
   'scoreResults',
-  'playAgain',
-  'playerLogin'
+  'playAgain'
 ]);
 
 module.exports = GameActions;

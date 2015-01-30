@@ -2,11 +2,15 @@
 
 var Reflux = require('reflux');
 
-var SocketController = require('../controllers/SocketController')();
-var DataController = require('../controllers/DataController');
+var navigate = require('react-mini-router').navigate;
+
+var MessageType = require('../io/Enum').MessageType;
+var Client = require('../io/Client');
+
+var PlayerController = require('../controllers/PlayerController');
 var MoveController = require('../controllers/MoveController');
 
-var _state;
+var _state = {};
 var _self;
 
 var GameStore = Reflux.createStore({
@@ -27,7 +31,7 @@ var GameStore = Reflux.createStore({
 
   onGameTic: function(time) {
 
-    // console.log('onGameTic');
+    // console.log('GameStore.onGameTic');
 
     _state.time = time;
 
@@ -36,25 +40,41 @@ var GameStore = Reflux.createStore({
 
   onPlayerMove: function(id) {
 
-    console.log('onPlayerMove');
+    console.log('GameStore.onPlayerMove');
 
-    var dto = DataController.getMoveDTO(id, _state.player._id);
+    var dto = PlayerController.createMoveDTO(id, _state.player._id);
 
-    var cb = function(data) {
+    Client.send(MessageType.MOVE, dto);
+  },
 
-      console.log('onPlayerMove.cb', data);
+  onPlayerMoveComplete: function() {
 
-      _state.isGamePlayed = true;
+    console.log('GameStore.onPlayerMoveComplete');
 
-      _self.trigger(_state);
-    };
+    _state.isGamePlayed = true;
 
-    SocketController.emit('move', dto, cb);
+    _self.trigger(_state);
+  },
+
+  onPlayerLogin: function(playerName) {
+
+    console.log('GameStore.onPlayerLogin', playerName);
+
+    var dto = PlayerController.createLoginDTO(playerName, _state.player._id);
+
+    Client.send(MessageType.LOGIN, dto);
+  },
+
+  onPlayerLoginComplete: function() {
+
+    console.log('GameStore.onPlayerLoginComplete');
+
+    _self.trigger(_state);
   },
 
   onScoreResults: function(score) {
 
-    console.log('onScoreResults');
+    console.log('GameStore.onScoreResults');
 
     _state.results = {
       move: MoveController.getMoveById(score.move._id),
@@ -66,36 +86,19 @@ var GameStore = Reflux.createStore({
 
     _self.trigger(_state);
 
-    if (typeof window !== 'undefined') {
-      console.log('window.location', window.location);
-
-    }
+    navigate('/podium');
   },
 
   onPlayAgain: function() {
 
-    console.log('onPlayAgain');
+    console.log('GameStore.onPlayAgain');
 
     _state.isGamePlayed = false;
     _state.isGameComplete = false;
 
     _self.trigger(_state);
-  },
 
-  onPlayerLogin: function(playerName) {
-
-    console.log('onPlayerLogin', playerName);
-
-    var dto = DataController.getLoginDTO(playerName, _state.player._id);
-
-    var cb = function(data) {
-
-      console.log('onPlayerLogin.cb', data);
-
-      _self.trigger(_state);
-    };
-
-    SocketController.emit('login', dto, cb);
+    navigate('/arena');
   }
 });
 
