@@ -7,11 +7,9 @@ require('node-jsx').install({
   extension: '.jsx'
 });
 
-var App = require('./app/App.jsx');
+var App = React.createFactory(require('./app/App.jsx'));
 
-var GameStore = require('./app/stores/GameStore');
-
-var ArenaController = require('./app/controllers/ArenaController');
+var StateController = require('./app/controllers/StateController');
 
 var url = require('url');
 
@@ -31,30 +29,29 @@ var Routes = {
 
     try {
 
-      ArenaController.getInitialStateAsync(function(state) {
+      StateController.getInitialStateAsync(function(state) {
 
-        // Get path for router
-        var path = url.parse(req.url).pathname;
+        var props = {
+          state: state,
+          path: url.parse(req.url).pathname,
+          history: true
+        };
 
         // Render ./app/views/index
         res.render('index', {
 
           // Render markup with React
-          markup: React.renderToString(App({
+          markup: React.renderToString(App(
 
             // Seed App view with state for 
             // all other views on _server_
-            state: state,
-            path: path
-          })),
+            props
+          )),
 
           // Pass state to template so it
           // may be retrieved for rendering
           // views on _client_ (./app/Bootstrap)
-          data: JSON.stringify({
-            state: state,
-            path: path
-          })
+          data: JSON.stringify(props)
         });
       });
 

@@ -14,11 +14,6 @@ var GameStart = React.createClass({
 
   mixins: [Reflux.connect(GameStore)],
 
-  getInitialState: function() {
-
-    return GameStore.getInitialState();
-  },
-
   onClick: function(event) {
 
     event.preventDefault();

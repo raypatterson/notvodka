@@ -1,7 +1,5 @@
 'use strict';
 
-var DataController = require('./DataController');
-
 var _active = [];
 
 var PlayerController = {
@@ -15,7 +13,7 @@ var PlayerController = {
 
   addActivePlayer: function(moveDTO, socket) {
 
-    _active.push(DataController.getPlayerDTO(moveDTO, socket));
+    _active.push(this.createPlayerDTO(moveDTO, socket));
   },
 
   getActivePlayers: function() {
@@ -26,6 +24,33 @@ var PlayerController = {
   clearActivePlayers: function() {
 
     _active.splice(0);
+  },
+
+  createPlayerDTO: function(moveDTO, socket) {
+    return {
+      moveDTO: moveDTO,
+      socket: socket
+    };
+  },
+
+  createMoveDTO: function(moveId, playerId) {
+
+    return {
+      move: {
+        _id: moveId
+      },
+      player: {
+        _id: playerId
+      }
+    };
+  },
+
+  createLoginDTO: function(playerName, playerId) {
+
+    return {
+      _id: playerId,
+      name: playerName
+    };
   }
 };
 

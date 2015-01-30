@@ -14,23 +14,16 @@ var GameArena = React.createClass({
 
   mixins: [Reflux.connect(GameStore)],
 
-  getInitialState: function() {
-
-    return GameStore.getInitialState();
-  },
-
   onClick: function(event) {
 
     event.preventDefault();
 
     GameActions.playerMove(event.target.dataset.id);
-
-    return false;
   },
 
   render: function() {
 
-    console.log('GameArena.render');
+    // console.log('GameArena.render');
 
     if (this.state.isGameComplete) {
 

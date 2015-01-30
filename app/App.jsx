@@ -4,7 +4,11 @@
 
 'use strict';
 
+var logger = require('./utils/logger')('App');
+
 var React = require('react');
+
+var RouterMixin = require('react-mini-router').RouterMixin;
 
 var GameStore = require('./stores/GameStore');
 
@@ -13,11 +17,18 @@ var GamePodium = require('./components/GamePodium.jsx');
 
 var App = React.createClass({
 
+  mixins: [RouterMixin],
+
   getInitialState: function() {
 
     GameStore.setInitialState(this.props.state);
 
-    return {};
+    return null;
+  },
+
+  routes: {
+    '/arena': 'arena',
+    '/podium': 'podium'
   },
 
   render: function() {
@@ -29,10 +40,19 @@ var App = React.createClass({
             <h1>Is it Vodka?</h1>
           </div>
         </div>
-        <GameArena />
-        <GamePodium />
+        {this.renderCurrentRoute()}
       </div>
     );
+  },
+
+  arena: function arena() {
+
+    return <GameArena />;
+  },
+
+  podium: function podium() {
+
+    return <GamePodium />;
   }
 });
 
