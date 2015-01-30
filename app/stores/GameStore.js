@@ -44,16 +44,32 @@ var GameStore = Reflux.createStore({
 
     var dto = PlayerController.createMoveDTO(id, _state.player._id);
 
-    var cb = function(data) {
+    Client.send(MessageType.MOVE, dto);
+  },
 
-      console.log('GameStore.onPlayerMove.cb', data);
+  onPlayerMoveComplete: function() {
 
-      _state.isGamePlayed = true;
+    console.log('GameStore.onPlayerMoveComplete');
 
-      _self.trigger(_state);
-    };
+    _state.isGamePlayed = true;
 
-    Client.send(MessageType.MOVE, dto, cb);
+    _self.trigger(_state);
+  },
+
+  onPlayerLogin: function(playerName) {
+
+    console.log('GameStore.onPlayerLogin', playerName);
+
+    var dto = PlayerController.createLoginDTO(playerName, _state.player._id);
+
+    Client.send(MessageType.LOGIN, dto);
+  },
+
+  onPlayerLoginComplete: function() {
+
+    console.log('GameStore.onPlayerLoginComplete');
+
+    _self.trigger(_state);
   },
 
   onScoreResults: function(score) {
@@ -81,22 +97,8 @@ var GameStore = Reflux.createStore({
     _state.isGameComplete = false;
 
     _self.trigger(_state);
-  },
 
-  onPlayerLogin: function(playerName) {
-
-    console.log('GameStore.onPlayerLogin', playerName);
-
-    var dto = PlayerController.createLoginDTO(playerName, _state.player._id);
-
-    var cb = function(data) {
-
-      console.log('GameStore.onPlayerLogin.cb', data);
-
-      _self.trigger(_state);
-    };
-
-    Client.send(MessageType.LOGIN, dto, cb);
+    navigate('/arena');
   }
 });
 

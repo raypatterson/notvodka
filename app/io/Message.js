@@ -1,11 +1,10 @@
 module.exports = {
 
-  send: function send(socket, messageType, messageData, shouldCallback) {
+  send: function send(socket, type, data) {
 
     socket.send(JSON.stringify({
-      type: messageType,
-      data: messageData,
-      shouldCallback: typeof shouldCallback === 'function' ? true : false
+      type: type,
+      data: data
     }));
   },
 

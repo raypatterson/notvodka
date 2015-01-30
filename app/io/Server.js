@@ -9,10 +9,10 @@ var Message = require('./Message');
 var _ = require('lodash');
 
 var ConnectionController = require('../controllers/ConnectionController');
-var TimeController = require('../controllers/TimeController');
 var DatabaseController = require('../controllers/DatabaseController');
-var GameController = require('../controllers/GameController');
 var PlayerController = require('../controllers/PlayerController');
+var GameController = require('../controllers/GameController');
+var TimeController = require('../controllers/TimeController');
 
 var _players;
 var _socketServer;
@@ -31,7 +31,7 @@ var _receiveMessage = function receiveMessage(messageDTO, socket) {
 
       PlayerController.addActivePlayer(data, socket);
 
-      cb(data);
+      Message.send(socket, MessageType.MOVE_COMPLETE);
 
       break;
 
@@ -41,7 +41,7 @@ var _receiveMessage = function receiveMessage(messageDTO, socket) {
 
         console.log('database', db);
 
-        cb(data);
+        Message.send(socket, MessageType.LOGIN_COMPLETE);
       });
 
       break;
@@ -94,7 +94,7 @@ var _addPlayerClientSocket = function addPlayerClientSocket(socket) {
   });
 };
 
-var removePlayerClientSocket = function _removePlayerClientSocket(socket) {
+var _removePlayerClientSocket = function _removePlayerClientSocket(socket) {
 
   ConnectionController.remove();
 

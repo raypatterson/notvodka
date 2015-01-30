@@ -32,6 +32,18 @@ var _receiveMessage = function receiveMessage(messageDTO) {
 
       break;
 
+    case MessageType.MOVE_COMPLETE:
+
+      GameActions.playerMoveComplete();
+
+      break;
+
+    case MessageType.LOGIN_COMPLETE:
+
+      GameActions.playerLoginComplete();
+
+      break;
+
     default:
 
       logger.error('Event type unknown: ', type);
@@ -55,9 +67,9 @@ socket.on(EventType.CLOSE, function close() {
 
 var Client = {
 
-  send: function send(type, data, cb) {
+  send: function send(type, data) {
 
-    Message.send(socket, type, data, cb);
+    Message.send(socket, type, data);
   }
 };
 

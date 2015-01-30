@@ -10,6 +10,8 @@ module.exports = {
     TIC: 'tic',
     BZZ: 'bzz',
     MOVE: 'move',
-    LOGIN: 'login'
+    MOVE_COMPLETE: 'move_complete',
+    LOGIN: 'login',
+    LOGIN_COMPLETE: 'login_complete'
   }
 }
