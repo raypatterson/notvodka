@@ -1,13 +1,16 @@
 'use strict';
 
 var Reflux = require('reflux');
+
 var navigate = require('react-mini-router').navigate;
 
-var SocketController = require('../controllers/SocketController')();
-var DataController = require('../controllers/DataController');
+var MessageType = require('../io/Enum').MessageType;
+var Client = require('../io/Client');
+
+var PlayerController = require('../controllers/PlayerController');
 var MoveController = require('../controllers/MoveController');
 
-var _state;
+var _state = {};
 var _self;
 
 var GameStore = Reflux.createStore({
@@ -39,7 +42,7 @@ var GameStore = Reflux.createStore({
 
     console.log('GameStore.onPlayerMove');
 
-    var dto = DataController.getMoveDTO(id, _state.player._id);
+    var dto = PlayerController.createMoveDTO(id, _state.player._id);
 
     var cb = function(data) {
 
@@ -50,7 +53,7 @@ var GameStore = Reflux.createStore({
       _self.trigger(_state);
     };
 
-    SocketController.emit('move', dto, cb);
+    Client.send(MessageType.MOVE, dto, cb);
   },
 
   onScoreResults: function(score) {
@@ -84,7 +87,7 @@ var GameStore = Reflux.createStore({
 
     console.log('GameStore.onPlayerLogin', playerName);
 
-    var dto = DataController.getLoginDTO(playerName, _state.player._id);
+    var dto = PlayerController.createLoginDTO(playerName, _state.player._id);
 
     var cb = function(data) {
 
@@ -93,7 +96,7 @@ var GameStore = Reflux.createStore({
       _self.trigger(_state);
     };
 
-    SocketController.emit('login', dto, cb);
+    Client.send(MessageType.LOGIN, dto, cb);
   }
 });
 

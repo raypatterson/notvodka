@@ -19,8 +19,6 @@ var GameResult = React.createClass({
     e.preventDefault();
 
     GameActions.playerLogin(this.refs.playerName.state.value);
-
-    return false;
   },
 
   render: function() {

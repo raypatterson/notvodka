@@ -9,7 +9,7 @@ require('node-jsx').install({
 
 var App = React.createFactory(require('./app/App.jsx'));
 
-var ArenaController = require('./app/controllers/ArenaController');
+var StateController = require('./app/controllers/StateController');
 
 var url = require('url');
 
@@ -29,7 +29,7 @@ var Routes = {
 
     try {
 
-      ArenaController.getInitialStateAsync(function(state) {
+      StateController.getInitialStateAsync(function(state) {
 
         var props = {
           state: state,

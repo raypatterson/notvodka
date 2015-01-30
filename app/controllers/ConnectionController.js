@@ -1,5 +1,6 @@
 'use strict';
 
+var NUM_SERVER_CONNECTIONS = 1;
 var _connections = 0;
 var _onActive;
 var _onInactive;
@@ -14,7 +15,7 @@ var ConnectionController = {
 
   add: function() {
 
-    if (_connections++ === 0) {
+    if (_connections++ === NUM_SERVER_CONNECTIONS) {
 
       _onActive(_connections);
     }
@@ -24,7 +25,7 @@ var ConnectionController = {
 
   remove: function() {
 
-    if (--_connections === 0) {
+    if (--_connections === NUM_SERVER_CONNECTIONS) {
 
       _onInactive(_connections);
     }

@@ -4,14 +4,16 @@
 
 'use strict';
 
+var logger = require('./utils/logger')('Bootstrap');
+
 var React = require('react');
 
-// var App = React.createFactory(require('./App.jsx'));
 var App = require('./App.jsx');
 
-var GameStore = require('./stores/GameStore');
-
 if (typeof window !== 'undefined') {
+
+  // Add styles
+  require('./sass/styles.scss');
 
   // Render App on client
   window.onload = function() {
@@ -29,13 +31,14 @@ if (typeof window !== 'undefined') {
 
       // Seed App view with state for 
       // all other views on _client_
-      <App state={state} path={path} history={history} />,
+      <App 
+        state={state} 
+        path={path} 
+        history={history} 
+      />,
 
       // Bind to DOM
       document.getElementById('game-app')
     );
-
-    // Bind Socket event listeners
-    require('./controllers/SocketController')();
   }
 }

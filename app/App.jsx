@@ -4,8 +4,9 @@
 
 'use strict';
 
+var logger = require('./utils/logger')('App');
+
 var React = require('react');
-var Reflux = require('reflux');
 
 var RouterMixin = require('react-mini-router').RouterMixin;
 
