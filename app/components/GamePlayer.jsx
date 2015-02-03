@@ -7,45 +7,31 @@
 var logger = require('../utils/logger')('GamePlayer');
 
 var React = require('react');
-var Reflux = require('reflux');
 
-var RouterMixin = require('react-mini-router').RouterMixin;
+var Router = require('react-router-component');
+var Locations = Router.Locations;
+var Location = Router.Location;
+
+var RouteType = require('../routes/RouteType');
+
+var GameWelcome = require('./GameWelcome.jsx');
+var GameStats = require('./GameStats.jsx');
 
 var GamePlayer = React.createClass({
-
-  mixins: [
-    RouterMixin
-  ],
-
-  routes: {
-    '/game/:stage': 'playerInactive',
-    '/game/:stage/player/:id': 'playerActive'
-  },
 
   render: function() {
 
     return (
-      <div className="game-player">
-        {this.renderCurrentRoute()}
-      </div>
-    );
-  },
-
-  playerInactive: function(gameStage) {
-
-    logger.debug('playerInactive');
-
-    return null;
-  },
-
-  playerActive: function(gameStage, playerId) {
-
-    logger.debug('playerActive');
-
-    return (
-      <div>
-        <p>Welcome Player</p>
-      </div>
+      <Locations path={this.props.path}>
+        <Location 
+          path={RouteType.WILDCARD + RouteType.GAME_PLAYER + RouteType.WILDCARD} 
+          handler={GameStats} 
+        />
+        <Location 
+          path={RouteType.WILDCARD} 
+          handler={GameWelcome} 
+        />
+      </Locations>
     );
   }
 });

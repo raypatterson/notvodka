@@ -10,7 +10,6 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var GameStore = require('../stores/GameStore');
-var GameActions = require('../actions/GameActions');
 
 var GameResult = React.createClass({
 

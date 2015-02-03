@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') {
   // Add styles
   require('./sass/styles.scss');
 
-  // Render App on client
+  // Render App on _client_
   window.onload = function onload() {
 
     // Retreive JSON data object from DOM
@@ -24,7 +24,7 @@ if (typeof window !== 'undefined') {
     // Or not... 
     var state = data ? data.state : {};
     var path = data ? data.path : '/';
-    var history = data ? data.history : '/';
+    var history = data ? data.history : true;
 
     // Render component view with React
     React.render(

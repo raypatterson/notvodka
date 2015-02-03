@@ -4,8 +4,6 @@ var logger = require('../utils/logger')('GameStore');
 
 var Reflux = require('reflux');
 
-var navigate = require('react-mini-router').navigate;
-
 var RouteType = require('../routes/RouteType');
 
 var MessageType = require('../io/Enum').MessageType;
@@ -14,8 +12,17 @@ var Client = require('../io/Client');
 var PlayerController = require('../controllers/PlayerController');
 var MoveController = require('../controllers/MoveController');
 
+var navigate = require('../components/GameRouter.jsx').navigate;
+
 var _state = {};
 var _self;
+
+var _navigate = function(route) {
+
+  var route = (_state.login !== undefined) ? route + RouteType.GAME_PLAYER + _state.login._id : route;
+
+  navigate(route);
+};
 
 var GameStore = Reflux.createStore({
 
@@ -75,9 +82,11 @@ var GameStore = Reflux.createStore({
 
     console.log('loginDTO', loginDTO);
 
-    _state.loginDTO = loginDTO;
+    _state.login = loginDTO;
 
     _self.trigger(_state);
+
+    _navigate(RouteType.GAME_PODIUM);
   },
 
   onScoreResults: function(score) {
@@ -94,7 +103,7 @@ var GameStore = Reflux.createStore({
 
     _self.trigger(_state);
 
-    navigate(RouteType.GAME_PODIUM);
+    _navigate(RouteType.GAME_PODIUM);
   },
 
   onPlayAgain: function() {
@@ -106,7 +115,7 @@ var GameStore = Reflux.createStore({
 
     _self.trigger(_state);
 
-    navigate(RouteType.GAME_ARENA);
+    _navigate(RouteType.GAME_FIELD);
   }
 });
 

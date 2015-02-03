@@ -21,7 +21,7 @@ var RoutesHandler = function(app) {
 
     default: function(req, res) {
       // Redirect to default route
-      res.redirect(RouteType.GAME_ARENA);
+      res.redirect(RouteType.GAME_FIELD);
     },
 
     podium: function(req, res) {
@@ -68,7 +68,7 @@ var RoutesHandler = function(app) {
     error: {
 
       pageNotFound: function(req, res, next) {
-        var err = new Error('Not Found');
+        var err = new Error('Page Not Found');
         err.status = 404;
         next(err);
       },
@@ -92,7 +92,7 @@ var RoutesHandler = function(app) {
     }
   };
 
-  app.get(RouteType.GAME_ARENA, handlers.arena);
+  app.get(RouteType.GAME_FIELD, handlers.arena);
   app.get(RouteType.GAME_PODIUM, handlers.podium);
   app.get(RouteType.DEFAULT, handlers.default);
 
