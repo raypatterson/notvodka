@@ -12,14 +12,17 @@ var RouterMixin = require('react-mini-router').RouterMixin;
 
 var GameStore = require('./stores/GameStore');
 
+var GamePlayer = require('./components/GamePlayer.jsx');
 var GameArena = require('./components/GameArena.jsx');
 var GamePodium = require('./components/GamePodium.jsx');
 
 var App = React.createClass({
 
-  mixins: [RouterMixin],
+  mixins: [
+    RouterMixin
+  ],
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
 
     GameStore.setInitialState(this.props.state);
 
@@ -27,11 +30,11 @@ var App = React.createClass({
   },
 
   routes: {
-    '/arena': 'arena',
-    '/podium': 'podium'
+    '/game/arena': 'arena',
+    '/game/podium': 'podium'
   },
 
-  render: function() {
+  render: function render() {
 
     return (
       <div className="game-container">
@@ -40,6 +43,7 @@ var App = React.createClass({
             <h1>Is it Vodka?</h1>
           </div>
         </div>
+
         {this.renderCurrentRoute()}
       </div>
     );

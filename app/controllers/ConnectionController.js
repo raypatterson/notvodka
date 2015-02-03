@@ -1,5 +1,7 @@
 'use strict';
 
+var logger = require('../utils/logger')('ConnectionController');
+
 var NUM_SERVER_CONNECTIONS = 1;
 var _connections = 0;
 var _onActive;
@@ -20,7 +22,7 @@ var ConnectionController = {
       _onActive(_connections);
     }
 
-    console.log(_connections + ' connections');
+    logger.debug(_connections + ' connections');
   },
 
   remove: function() {
@@ -30,7 +32,7 @@ var ConnectionController = {
       _onInactive(_connections);
     }
 
-    console.log(_connections + ' connections');
+    logger.debug(_connections + ' connections');
   }
 };
 

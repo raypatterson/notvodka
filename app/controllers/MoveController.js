@@ -1,5 +1,7 @@
 'use strict';
 
+var logger = require('../utils/logger')('MoveController');
+
 var _ = require('lodash');
 
 var MoveController = {

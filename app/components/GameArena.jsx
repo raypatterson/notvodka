@@ -14,11 +14,9 @@ var GameArena = React.createClass({
 
   mixins: [Reflux.connect(GameStore)],
 
-  onClick: function(event) {
+  clickHandler: function(id) {
 
-    event.preventDefault();
-
-    GameActions.playerMove(event.target.dataset.id);
+    GameActions.playerMove(id);
   },
 
   render: function() {
@@ -38,12 +36,13 @@ var GameArena = React.createClass({
       var moveButtons = this.state.potentialMoves.map(function(option) {
         return (
           <button 
-            data-id={option._id} 
             key={option._id} 
-            onClick={self.onClick} 
+            onClick={self.clickHandler.bind(null, option._id)} 
             type="button" 
             className={buttonClasses}
-            >{option.title}</button>
+            >
+            {option.title}
+            </button>
         );
       });
 

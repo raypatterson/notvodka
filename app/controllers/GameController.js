@@ -1,5 +1,7 @@
 'use strict';
 
+var logger = require('../utils/logger')('GameController');
+
 var _ = require('lodash');
 
 var MoveController = require('./MoveController');
@@ -7,7 +9,7 @@ var PlayerController = require('./PlayerController');
 
 var MOVE_LIMIT = 3;
 
-var _getGame = function() {
+var _getGame = function getGame() {
 
   var game = {
     _id: Date.now(),

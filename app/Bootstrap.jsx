@@ -16,7 +16,7 @@ if (typeof window !== 'undefined') {
   require('./sass/styles.scss');
 
   // Render App on client
-  window.onload = function() {
+  window.onload = function onload() {
 
     // Retreive JSON data object from DOM
     var data = JSON.parse(document.getElementById('game-data').innerHTML);

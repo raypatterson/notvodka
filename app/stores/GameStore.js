@@ -1,8 +1,12 @@
 'use strict';
 
+var logger = require('../utils/logger')('GameStore');
+
 var Reflux = require('reflux');
 
 var navigate = require('react-mini-router').navigate;
+
+var RouteType = require('../routes/RouteType');
 
 var MessageType = require('../io/Enum').MessageType;
 var Client = require('../io/Client');
@@ -31,7 +35,7 @@ var GameStore = Reflux.createStore({
 
   onGameTic: function(time) {
 
-    // console.log('GameStore.onGameTic');
+    // logger.debug('onGameTic');
 
     _state.time = time;
 
@@ -40,7 +44,7 @@ var GameStore = Reflux.createStore({
 
   onPlayerMove: function(id) {
 
-    console.log('GameStore.onPlayerMove');
+    logger.debug('onPlayerMove');
 
     var dto = PlayerController.createMoveDTO(id, _state.player._id);
 
@@ -49,7 +53,7 @@ var GameStore = Reflux.createStore({
 
   onPlayerMoveComplete: function() {
 
-    console.log('GameStore.onPlayerMoveComplete');
+    logger.debug('onPlayerMoveComplete');
 
     _state.isGamePlayed = true;
 
@@ -58,23 +62,27 @@ var GameStore = Reflux.createStore({
 
   onPlayerLogin: function(playerName) {
 
-    console.log('GameStore.onPlayerLogin', playerName);
+    logger.debug('onPlayerLogin', playerName);
 
     var dto = PlayerController.createLoginDTO(playerName, _state.player._id);
 
     Client.send(MessageType.LOGIN, dto);
   },
 
-  onPlayerLoginComplete: function() {
+  onPlayerLoginComplete: function(loginDTO) {
 
-    console.log('GameStore.onPlayerLoginComplete');
+    logger.debug('onPlayerLoginComplete');
+
+    console.log('loginDTO', loginDTO);
+
+    _state.loginDTO = loginDTO;
 
     _self.trigger(_state);
   },
 
   onScoreResults: function(score) {
 
-    console.log('GameStore.onScoreResults');
+    logger.debug('onScoreResults');
 
     _state.results = {
       move: MoveController.getMoveById(score.move._id),
@@ -86,19 +94,19 @@ var GameStore = Reflux.createStore({
 
     _self.trigger(_state);
 
-    navigate('/podium');
+    navigate(RouteType.GAME_PODIUM);
   },
 
   onPlayAgain: function() {
 
-    console.log('GameStore.onPlayAgain');
+    logger.debug('onPlayAgain');
 
     _state.isGamePlayed = false;
     _state.isGameComplete = false;
 
     _self.trigger(_state);
 
-    navigate('/arena');
+    navigate(RouteType.GAME_ARENA);
   }
 });
 

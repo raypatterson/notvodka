@@ -37,11 +37,13 @@ var _receiveMessage = function receiveMessage(messageDTO, socket) {
 
     case MessageType.LOGIN:
 
-      DatabaseController.addPlayer(data, function onAddPlayer(db) {
+      DatabaseController.addPlayer(data, function onAddPlayer(databaseDTO) {
 
-        console.log('database', db);
+        // console.debug('databaseDTO', databaseDTO);
 
-        Message.send(socket, MessageType.LOGIN_COMPLETE);
+        var dto = PlayerController.createLoginDTO(databaseDTO.name, databaseDTO._id);
+
+        Message.send(socket, MessageType.LOGIN_COMPLETE, dto);
       });
 
       break;
@@ -53,8 +55,6 @@ var _receiveMessage = function receiveMessage(messageDTO, socket) {
 };
 
 var _onTic = function(data) {
-
-  logger.debug('data', data);
 
   _.each(_socketServer.clients, function onIterateSockets(socket) {
 
@@ -104,8 +104,6 @@ var _removePlayerClientSocket = function _removePlayerClientSocket(socket) {
 var Server = {
 
   init: function(socketServer) {
-
-    logger.info('init');
 
     _socketServer = socketServer;
 

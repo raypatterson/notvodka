@@ -14,32 +14,24 @@ var GameStart = React.createClass({
 
   mixins: [Reflux.connect(GameStore)],
 
-  onClick: function(event) {
+  clickHandler: function(event) {
 
     event.preventDefault();
 
     GameActions.playAgain();
-
-    return false;
   },
 
   render: function() {
 
-    if (this.state.isGameComplete) {
+    return (
 
-      return (
-
-        <button
-          className="btn btn-lg btn-default" 
-          type="button" 
-          onClick={this.onClick}>
-          Start a new game
-        </button>
-      )
-    } else {
-
-      return null;
-    }
+      <button
+        className="btn btn-lg btn-default" 
+        type="button" 
+        onClick={this.clickHandler}>
+        Start a new game
+      </button>
+    );
   }
 });
 

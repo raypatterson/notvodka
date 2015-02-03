@@ -1,5 +1,7 @@
 'use strict';
 
+var logger = require('../utils/logger')('PlayerController');
+
 var _active = [];
 
 var PlayerController = {

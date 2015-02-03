@@ -1,5 +1,7 @@
 'use strict';
 
+var logger = require('../utils/logger')('TimeController');
+
 var TIME_INTERVAL = 1000;
 var TIME_LIMIT = 1000 * 5;
 
@@ -8,12 +10,12 @@ var _tic;
 var _onTic;
 var _onBzz;
 
-var _stop = function() {
+var _stop = function stop() {
 
   clearInterval(_tic);
 };
 
-var _start = function(elapse) {
+var _start = function start(elapse) {
 
   _tic = setInterval(function() {
 

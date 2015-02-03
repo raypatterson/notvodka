@@ -16,7 +16,7 @@ var _receiveMessage = function receiveMessage(messageDTO) {
   var type = json.type;
   var data = json.data;
 
-  logger.debug('Received event type: ', type);
+  // logger.debug('Received event type: ', type);
 
   switch (type) {
 
@@ -34,13 +34,13 @@ var _receiveMessage = function receiveMessage(messageDTO) {
 
     case MessageType.MOVE_COMPLETE:
 
-      GameActions.playerMoveComplete();
+      GameActions.playerMoveComplete(data);
 
       break;
 
     case MessageType.LOGIN_COMPLETE:
 
-      GameActions.playerLoginComplete();
+      GameActions.playerLoginComplete(data);
 
       break;
 

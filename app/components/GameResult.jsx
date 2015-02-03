@@ -4,6 +4,8 @@
 
 'use strict';
 
+var logger = require('../utils/logger')('GameResult');
+
 var React = require('react');
 var Reflux = require('reflux');
 
@@ -14,39 +16,18 @@ var GameResult = React.createClass({
 
   mixins: [Reflux.connect(GameStore)],
 
-  onSubmit: function(e) {
-
-    e.preventDefault();
-
-    GameActions.playerLogin(this.refs.playerName.state.value);
-  },
-
   render: function() {
 
-    if (this.state.isGameComplete) {
+    return (
 
-      return (
-
-        <div className="game-result">
-          <p>
-            The correct answer was <b>{this.state.results.answer.title}</b>
-            <br />
-            Your answer is {this.state.results.isGameWonByGuessing ? 'correct!' : 'incorrect.'}
-          </p>
-          <hr />
-          <p>Want to keep track of your score?</p>
-          <form className="form-inline" role="form">
-            <div className="form-group">
-              <input type="name" className="form-control" ref="playerName" placeholder="Enter name" maxLength="30" />
-            </div>
-            <button type="submit" className="btn btn-default" onClick={this.onSubmit}>Submit</button>
-          </form>
-        </div>
-      )
-    } else {
-
-      return null;
-    }
+      <div className="game-result">
+        <p>
+          The correct answer was <b>{this.state.results.answer.title}</b>
+          <br />
+          Your answer is {this.state.results.isGameWonByGuessing ? 'correct!' : 'incorrect.'}
+        </p>
+      </div>
+    );
   }
 });
 
