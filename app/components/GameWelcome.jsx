@@ -8,7 +8,7 @@ var logger = require('../utils/logger')('GameWelcome');
 
 var React = require('react');
 
-var RouteType = require('../routes/RouteType');
+var RouteType = require('../routes/Enum').RouteType;
 
 var GameWelcome = React.createClass({
 

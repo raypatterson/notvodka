@@ -8,12 +8,6 @@ var logger = require('./utils/logger')('App');
 
 var React = require('react');
 
-var Router = require('react-router-component');
-var Locations = Router.Locations;
-var Location = Router.Location;
-
-var RouteType = require('./routes/RouteType');
-
 var GameStore = require('./stores/GameStore');
 
 /* *************************************************************
@@ -71,6 +65,7 @@ var App = React.createClass({
         </div>
 
         <GameArena path={this.props.path} />
+        
         <GamePlayer path={this.props.path} />
 
       </div>

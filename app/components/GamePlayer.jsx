@@ -12,7 +12,7 @@ var Router = require('react-router-component');
 var Locations = Router.Locations;
 var Location = Router.Location;
 
-var RouteType = require('../routes/RouteType');
+var MatchType = require('../routes/Enum').MatchType;
 
 var GameWelcome = require('./GameWelcome.jsx');
 var GameStats = require('./GameStats.jsx');
@@ -22,16 +22,20 @@ var GamePlayer = React.createClass({
   render: function() {
 
     return (
+
       <Locations path={this.props.path}>
+
         <Location 
-          path={RouteType.WILDCARD + RouteType.GAME_PLAYER + RouteType.WILDCARD} 
+          path={MatchType.GAME_PLAYER} 
           handler={GameStats} 
         />
         <Location 
-          path={RouteType.WILDCARD} 
+          path={MatchType.WILDCARD} 
           handler={GameWelcome} 
         />
+
       </Locations>
+
     );
   }
 });

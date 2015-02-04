@@ -27,6 +27,6 @@ app.use(require('connect-livereload')({
 }));
 
 // Routes
-require('./app/routes/RouteHandler')(app);
+require('./app/routes/Handler')(app);
 
 module.exports = app;

@@ -9,7 +9,7 @@ var logger = require('../utils/logger')('GameStats');
 var React = require('react');
 var Reflux = require('reflux');
 
-var RouteType = require('../routes/RouteType');
+var RouteType = require('../routes/Enum').RouteType;
 
 var GameStore = require('../stores/GameStore');
 

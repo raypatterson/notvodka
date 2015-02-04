@@ -15,7 +15,7 @@ var Location = Router.Location;
 var GameField = require('./GameField.jsx');
 var GamePodium = require('./GamePodium.jsx');
 
-var RouteType = require('../routes/RouteType');
+var MatchType = require('../routes/Enum').MatchType;
 
 var GameArena = React.createClass({
 
@@ -24,11 +24,11 @@ var GameArena = React.createClass({
     return (
       <Locations path={this.props.path}>
         <Location 
-          path={RouteType.GAME_FIELD + RouteType.WILDCARD} 
+          path={MatchType.GAME_FIELD} 
           handler={GameField} 
         />
         <Location 
-          path={RouteType.GAME_PODIUM + RouteType.WILDCARD} 
+          path={MatchType.GAME_PODIUM} 
           handler={GamePodium} 
         />
       </Locations>

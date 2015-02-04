@@ -1,21 +1,23 @@
 'use strict';
 
+var url = require('url');
+
 var React = require('react');
 
-//For requiring `.jsx` files as Node modules
+// For requiring `.jsx` files as Node modules
 require('node-jsx').install({
   extension: '.jsx'
 });
 
-var RouteType = require('./RouteType');
-
-var App = React.createFactory(require('../App.jsx'));
+var RouteType = require('./Enum').RouteType;
+var MatchType = require('./Enum').MatchType;
 
 var StateController = require('../controllers/StateController');
 
-var url = require('url');
+var App = React.createFactory(require('../App.jsx'));
 
-var RoutesHandler = function(app) {
+
+var Handler = function(app) {
 
   var handlers = {
 
@@ -25,8 +27,8 @@ var RoutesHandler = function(app) {
     },
 
     podium: function(req, res) {
-
-      // res.send(true);
+      // Redirect to default route
+      res.redirect(RouteType.GAME_FIELD);
     },
 
     arena: function(req, res) {
@@ -92,9 +94,9 @@ var RoutesHandler = function(app) {
     }
   };
 
-  app.get(RouteType.GAME_FIELD, handlers.arena);
-  app.get(RouteType.GAME_PODIUM, handlers.podium);
-  app.get(RouteType.DEFAULT, handlers.default);
+  app.get(MatchType.GAME_FIELD, handlers.arena);
+  app.get(MatchType.GAME_PODIUM, handlers.podium);
+  app.get(MatchType.WILDCARD, handlers.default);
 
   // Catch 404, forward to error handler
   app.use(handlers.error.pageNotFound);
@@ -108,4 +110,4 @@ var RoutesHandler = function(app) {
   app.use(handlers.error.production);
 };
 
-module.exports = RoutesHandler;
+module.exports = Handler;

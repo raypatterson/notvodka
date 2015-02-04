@@ -4,7 +4,7 @@ var logger = require('../utils/logger')('GameStore');
 
 var Reflux = require('reflux');
 
-var RouteType = require('../routes/RouteType');
+var RouteType = require('../routes/Enum').RouteType;
 
 var MessageType = require('../io/Enum').MessageType;
 var Client = require('../io/Client');
