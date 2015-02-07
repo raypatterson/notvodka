@@ -2,7 +2,7 @@
 
 var logger = require('../utils/logger')('TimeController');
 
-var TIME_INTERVAL = 1000;
+var TIME_INTERVAL = 16;
 var TIME_LIMIT = 1000 * 5;
 
 var _tic;
@@ -56,14 +56,14 @@ var TimeController = {
 
   start: function() {
 
-    console.log('Starting tic');
+    logger.debug('Starting tic');
 
     _start(0);
   },
 
   stop: function() {
 
-    console.log('Stopping tic');
+    logger.debug('Stopping tic');
 
     _stop();
   }

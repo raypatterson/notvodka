@@ -30,6 +30,8 @@ var GameStore = Reflux.createStore({
 
   setInitialState: function(state) {
 
+    // logger.debug('setInitialState', state);
+
     _self = this;
 
     _state = state;
@@ -40,58 +42,48 @@ var GameStore = Reflux.createStore({
     return _state;
   },
 
-  onGameTic: function(time) {
+  onGameTic: function(data) {
 
-    // logger.debug('onGameTic');
+    // logger.debug('onGameTic', data);
 
-    _state.time = time;
-
-    _self.trigger(_state);
+    // TODO: Make a different store for the game tic so it isn't trying to update DOM state on server
+    if (_self) {
+      _state.time = data.time;
+      _self.trigger(_state)
+    };
   },
 
   onPlayerMove: function(id) {
 
-    logger.debug('onPlayerMove');
+    // logger.debug('onPlayerMove');
 
-    var dto = PlayerController.createMoveDTO(id, _state.player._id);
+    var data = PlayerController.createMoveDTO(id, _state.player._id);
 
-    Client.send(MessageType.MOVE, dto);
-  },
+    Client.send(
 
-  onPlayerMoveComplete: function() {
+      MessageType.MOVE,
 
-    logger.debug('onPlayerMoveComplete');
+      data,
 
-    _state.isGamePlayed = true;
+      function onFulfilled() {
 
-    _self.trigger(_state);
-  },
+        // logger.debug('onPlayerMove onFulfilled');
 
-  onPlayerLogin: function(playerName) {
+        _state.isGamePlayed = true;
 
-    logger.debug('onPlayerLogin', playerName);
+        _self.trigger(_state);
+      },
 
-    var dto = PlayerController.createLoginDTO(playerName, _state.player._id);
+      function onRejected(reason) {
 
-    Client.send(MessageType.LOGIN, dto);
-  },
-
-  onPlayerLoginComplete: function(loginDTO) {
-
-    logger.debug('onPlayerLoginComplete');
-
-    console.log('loginDTO', loginDTO);
-
-    _state.login = loginDTO;
-
-    _self.trigger(_state);
-
-    _navigate(RouteType.GAME_PODIUM);
+        logger.error('onPlayerMove onRejected', reason);
+      }
+    );
   },
 
   onScoreResults: function(score) {
 
-    logger.debug('onScoreResults');
+    // logger.debug('onScoreResults', score);
 
     _state.results = {
       move: MoveController.getMoveById(score.move._id),
@@ -116,7 +108,52 @@ var GameStore = Reflux.createStore({
     _self.trigger(_state);
 
     _navigate(RouteType.GAME_FIELD);
+  },
+
+  onPlayerLogin: function(playerName) {
+
+    logger.debug('onPlayerLogin', playerName);
+
+    var data = PlayerController.createLoginDTO(playerName, _state.player._id);
+
+    // Client.send(MessageType.LOGIN, dto);
+
+    Client.send(
+
+      MessageType.LOGIN,
+
+      data,
+
+      function onFulfilled(login) {
+
+        logger.debug('onPlayerLogin onFulfilled', login);
+
+        _state.login = login;
+
+        _self.trigger(_state);
+
+        _navigate(RouteType.GAME_PODIUM);
+      },
+
+      function onRejected(reason) {
+
+        logger.error('onPlayerLogin onRejected', reason);
+      }
+    );
   }
+
+  // onPlayerLoginComplete: function(loginDTO) {
+
+  //   logger.debug('onPlayerLoginComplete');
+
+  //   console.log('loginDTO', loginDTO);
+
+  //   _state.login = loginDTO;
+
+  //   _self.trigger(_state);
+
+  //   _navigate(RouteType.GAME_PODIUM);
+  // },
 });
 
 module.exports = GameStore;
