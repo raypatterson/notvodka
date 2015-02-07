@@ -13,9 +13,9 @@ var PlayerController = {
     }
   },
 
-  addActivePlayer: function(moveDTO, socket) {
+  addActivePlayer: function(moveDTO, connection) {
 
-    _active.push(this.createPlayerDTO(moveDTO, socket));
+    _active.push(this.createPlayerDTO(moveDTO, connection));
   },
 
   getActivePlayers: function() {
@@ -28,10 +28,10 @@ var PlayerController = {
     _active.splice(0);
   },
 
-  createPlayerDTO: function(moveDTO, socket) {
+  createPlayerDTO: function(moveDTO, connection) {
     return {
       moveDTO: moveDTO,
-      socket: socket
+      connection: connection
     };
   },
 
