@@ -8,6 +8,8 @@ var EventType = require('./Enum').EventType;
 var MessageType = require('./Enum').MessageType;
 var Message = require('./Message');
 
+var ServerApi = require('./ServerApi');
+
 var ConnectionController = require('../controllers/ConnectionController');
 var DatabaseController = require('../controllers/DatabaseController');
 var PlayerController = require('../controllers/PlayerController');
@@ -15,30 +17,6 @@ var GameController = require('../controllers/GameController');
 var TimeController = require('../controllers/TimeController');
 
 var _players;
-
-var ServerAPI = {
-
-  move: function(data) {
-
-    var connection = ConnectionController.getConnectionById(data.connectionId);
-
-    PlayerController.addActivePlayer(data, connection);
-
-    return true;
-  },
-
-  login: function(data) {
-
-    logger.debug('login', data);
-
-    DatabaseController.addPlayer(data, function onAddPlayer(databaseDTO) {
-
-      var data = PlayerController.createLoginDTO(databaseDTO.name, databaseDTO._id);
-
-      return data;
-    });
-  }
-};
 
 var Server = {
 
@@ -85,16 +63,17 @@ var Server = {
 
       socketServer,
 
-      ServerAPI,
+      // Has methods the clients can access
+      ServerApi,
 
-      function onConnectionAdded(socket) {
+      function onConnectionAdded(connection) {
 
-        // logger.debug('onConnectionAdded');
+        // logger.debug('onConnectionAdded:', connection);
       },
 
-      function onConnectionRemoved(socket) {
+      function onConnectionRemoved(connection) {
 
-        // logger.debug('onConnectionRemoved');
+        // logger.debug('onConnectionRemoved:', connection);
       },
 
       function onConnectionsActive(connections) {

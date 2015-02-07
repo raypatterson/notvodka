@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
 
   send: function send(connection, type, data) {
