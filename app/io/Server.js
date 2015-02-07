@@ -2,11 +2,11 @@
 
 var logger = require('../utils/logger')('Server');
 
+var _ = require('lodash');
+
 var EventType = require('./Enum').EventType;
 var MessageType = require('./Enum').MessageType;
 var Message = require('./Message');
-
-var _ = require('lodash');
 
 var ConnectionController = require('../controllers/ConnectionController');
 var DatabaseController = require('../controllers/DatabaseController');
@@ -16,19 +16,9 @@ var TimeController = require('../controllers/TimeController');
 
 var _players;
 
-var _sendToRemote = function sendToRemote(connection, type, data) {
-
-  connection.remote.send({
-    type: type,
-    data: data
-  });
-};
-
 var ServerAPI = {
 
   move: function(data) {
-
-    // logger.debug('move data', data);
 
     var connection = ConnectionController.getConnectionById(data.connectionId);
 
@@ -54,13 +44,15 @@ var Server = {
 
   init: function(socketServer) {
 
+    // Timer Controller
+
     TimeController.init(
 
       function onTic(data) {
 
         ConnectionController.getAllConnections().map(function(connection) {
 
-          _sendToRemote(connection, MessageType.TIC, data);
+          Message.send(connection, MessageType.TIC, data);
         });
       },
 
@@ -76,7 +68,7 @@ var Server = {
 
               if (player.connection) { // Not a dummy move
 
-                _sendToRemote(player.connection, MessageType.BZZ, player.moveDTO);
+                Message.send(player.connection, MessageType.BZZ, player.moveDTO);
               }
             });
           });
@@ -86,6 +78,8 @@ var Server = {
         }
       }
     );
+
+    // Connection Controller
 
     ConnectionController.init(
 

@@ -10,6 +10,10 @@ var Message = require('./Message');
 
 var socket = require('engine.io-client')('http://localhost:8000');
 
+var Connection = require("q-connection");
+
+var ServerAPI = Connection(socket);
+
 var GameActions = require('../actions/GameActions');
 
 var _connectionId;
@@ -29,22 +33,13 @@ var _multimethod = multimethod()
   })
   .when(MessageType.TIC, function(input) {
 
-    // logger.debug('TIC', MessageType.TIC);
-
-    // FIXME: For some reason this doesn't work if the prop isn't accessed before passing
-    var data = _getData(input);
-    // Ideally we could just pass...
-    GameActions.gameTic(data);
+    GameActions.gameTic(_getData(input));
 
     return true;
   })
   .when(MessageType.BZZ, function(input) {
 
-    // logger.debug('BZZ', MessageType.BZZ);
-
-    var data = _getData(input);
-
-    GameActions.scoreResults(data);
+    GameActions.scoreResults(_getData(input));
 
     return true;
   });
@@ -59,10 +54,6 @@ var _handleMessage = function handleMessage(data) {
     _multimethod(data.args[0])
   };
 };
-
-var Connection = require("q-connection");
-
-var ServerAPI = Connection(socket);
 
 socket.on(EventType.OPEN, function open() {
 

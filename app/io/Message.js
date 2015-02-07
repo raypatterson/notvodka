@@ -1,14 +1,13 @@
 module.exports = {
 
-  send: function send(socket, type, data) {
+  send: function send(connection, type, data) {
 
-    socket.send(JSON.stringify({
+    // TODO: Why does this need to be accessed?
+    var remote = connection.remote;
+
+    remote.send({
       type: type,
       data: data
-    }));
-  },
-
-  receive: function receive() {
-
+    });
   }
 };
