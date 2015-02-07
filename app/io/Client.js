@@ -57,7 +57,7 @@ var _handleMessage = function handleMessage(data) {
 
 socket.on(EventType.OPEN, function open() {
 
-  logger.debug(EventType.OPEN);
+  // logger.debug(EventType.OPEN);
 
   ServerAPI
     .get('connectionId')

@@ -54,12 +54,12 @@ var ConnectionController = {
 
       var connection = _createConnection(socket, api);
 
-      _connections.push(connection);
-
       if (_connections.length === NUM_SERVER_CONNECTIONS) {
 
         onConnectionsActive(_connections);
       }
+
+      _connections.push(connection);
 
       logger.debug(_connections.length + ' connections');
 

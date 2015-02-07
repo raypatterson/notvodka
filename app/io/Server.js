@@ -11,12 +11,9 @@ var Message = require('./Message');
 var ServerApi = require('./ServerApi');
 
 var ConnectionController = require('../controllers/ConnectionController');
-var DatabaseController = require('../controllers/DatabaseController');
 var PlayerController = require('../controllers/PlayerController');
 var GameController = require('../controllers/GameController');
 var TimeController = require('../controllers/TimeController');
-
-var _players;
 
 var Server = {
 
@@ -28,13 +25,7 @@ var Server = {
 
       function onTic(data) {
 
-        var connections = ConnectionController.getAllConnections();
-
-        // logger.debug('onTic', connections);
-
-        connections.map(function(connection) {
-
-          // logger.debug('onTic', connection);
+        ConnectionController.getAllConnections().map(function(connection) {
 
           Message.send(connection, MessageType.TIC, data);
         });
@@ -42,13 +33,13 @@ var Server = {
 
       function onBzz() {
 
-        _players = PlayerController.getActivePlayers();
+        var players = PlayerController.getActivePlayers();
 
-        if (_players.length > 0) {
+        if (players.length > 0) {
 
-          _.each(GameController.getGames(_players), function onIterateGames(game) {
+          GameController.getGames(players).map(function onIterateGames(game) {
 
-            _.each(game.players, function onIteratePlayers(player) {
+            game.players.map(function onIteratePlayers(player) {
 
               if (player.connection) { // Not a dummy move
 
@@ -61,6 +52,28 @@ var Server = {
           PlayerController.clearActivePlayers();
         }
       }
+
+      // function onBzz() {
+
+      //   var players = PlayerController.getActivePlayers();
+
+      //   if (players.length > 0) {
+
+      //     _.each(GameController.getGames(players), function onIterateGames(game) {
+
+      //       _.each(game.players, function onIteratePlayers(player) {
+
+      //         if (player.connection) { // Not a dummy move
+
+      //           Message.send(player.connection, MessageType.BZZ, player.moveDTO);
+      //         }
+      //       });
+      //     });
+
+      //     // Clear
+      //     PlayerController.clearActivePlayers();
+      //   }
+      // }
     );
 
     // Connection Controller

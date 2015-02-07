@@ -32,6 +32,10 @@ var GameField = React.createClass({
       var buttonClasses = "btn btn-lg btn-default" + (self.state.isGamePlayed ? " disabled" : "");
 
       var moveButtons = this.state.potentialMoves.map(function(option) {
+
+        // Add some styles maybe?
+        buttonClasses += ' ' + option.title.toLowerCase().split(' ').join('-');
+
         return (
           <button 
             key={option._id} 
@@ -44,7 +48,8 @@ var GameField = React.createClass({
         );
       });
 
-      var width = this.state.time ? (this.state.time.progress * 100) : 0;
+      var time = this.state.time;
+      var width = time ? time.progress * 100 : 0;
 
       var statusStyle = {
         width: width + "%"

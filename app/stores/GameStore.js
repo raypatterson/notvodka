@@ -83,7 +83,7 @@ var GameStore = Reflux.createStore({
 
   onScoreResults: function(score) {
 
-    logger.debug('onScoreResults', score);
+    // logger.debug('onScoreResults', score);
 
     _state.results = {
       move: MoveController.getMoveById(score.move._id),
