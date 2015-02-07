@@ -18,28 +18,20 @@ var GameActions = require('../actions/GameActions');
 
 var _connectionId;
 
-var _getData = function(input) {
-  return input.data;
-}
-
-var _getType = function(input) {
-  return input.type;
-}
-
 var _multimethod = multimethod()
   .dispatch(function(input) {
 
-    return _getType(input) || null;
+    return input.type || null;
   })
   .when(MessageType.TIC, function(input) {
 
-    GameActions.gameTic(_getData(input));
+    GameActions.gameTic(input.data);
 
     return true;
   })
   .when(MessageType.BZZ, function(input) {
 
-    GameActions.scoreResults(_getData(input));
+    GameActions.scoreResults(input.data);
 
     return true;
   });
@@ -68,8 +60,6 @@ socket.on(EventType.OPEN, function open() {
     });
 
   socket.on(EventType.MESSAGE, function message(data) {
-
-    // logger.debug(EventType.MESSAGE, data);
 
     _handleMessage(data);
   });
