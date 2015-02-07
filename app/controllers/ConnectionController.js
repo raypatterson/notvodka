@@ -32,7 +32,7 @@ var _createConnection = function createConnection(socket, api) {
   });
 
   // Allows the client to access the ID include in requests back to the server
-  // TODO: Is there a cleander way to make this association?
+  // TODO: Is there a better way to make this association?
   var id = socket.id;
 
   api.connectionId = id;
