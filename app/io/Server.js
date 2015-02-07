@@ -118,7 +118,16 @@ var Server = {
 
     TimeController.init(
 
-      _onTic,
+      function onTic(data) {
+
+        ConnectionController.getAllConnections().map(function(connection) {
+          connection.remote.send({
+            type: MessageType.TIC,
+            data: data
+          });
+        });
+      },
+
       _onBzz
     );
 

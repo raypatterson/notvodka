@@ -15,18 +15,19 @@ var GameActions = require('../actions/GameActions');
 var _connectionId;
 
 var _handleMessage = multimethod()
-  .dispatch(function(o) {
+  .dispatch(function(input) {
 
-    logger.debug('data', o);
+    logger.debug('input', input);
 
-    var type = o.type;
-    var data = o.data;
-
-    return type;
+    return input.args ? input.args[0].type : null;
   })
-  .when(MessageType.ID, function(o) {
+  .when(MessageType.TIC, function(input) {
 
-    // logger.debug('Handle Message', MessageType.ID);
+    var time = input.args[0].data.time;
+
+    logger.debug('Tic', time);
+
+    GameActions.gameTic(time);
 
     return true;
   });
@@ -83,8 +84,6 @@ socket.on(EventType.OPEN, function open() {
   ServerAPI
     .get('connectionId')
     .then(function(connectionId) {
-      logger.debug('connectionId:', connectionId);
-
       // Need to include in direct calls to server API
       // TODO: Figure out if there is a simpleer way to map client reusets to specific server handlers
       _connectionId = connectionId;

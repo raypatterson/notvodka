@@ -30,6 +30,8 @@ var GameStore = Reflux.createStore({
 
   setInitialState: function(state) {
 
+    logger.debug('setInitialState', state);
+
     _self = this;
 
     _state = state;
@@ -42,11 +44,13 @@ var GameStore = Reflux.createStore({
 
   onGameTic: function(time) {
 
-    // logger.debug('onGameTic');
+    logger.debug('onGameTic', time);
 
     _state.time = time;
 
-    _self.trigger(_state);
+    if (_self) {
+      _self.trigger(_state)
+    };
   },
 
   onPlayerMove: function(id) {

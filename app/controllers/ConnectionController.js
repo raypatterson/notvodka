@@ -46,7 +46,6 @@ var ConnectionController = {
 
   init: function(server, api, onConnectionAdded, onConnectionRemoved, onConnectionsActive, onConnectionsInactive) {
 
-
     server.on(EventType.CONNECT, function connection(socket) {
 
       logger.info(EventType.CONNECT);
@@ -68,7 +67,7 @@ var ConnectionController = {
 
         logger.info(EventType.DISCONNECT);
 
-        _connections.splice(_connections.indexOf(connection), 1);
+        connection = _connections.splice(_connections.indexOf(connection), 1)[0];
 
         onConnectionRemoved(connection);
 
