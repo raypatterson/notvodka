@@ -62,6 +62,7 @@ gulp.task('webpack', function() {
     resolve: {
       modulesDirectories: [
         'node_modules',
+        'bower_components/',
         'app'
       ]
     },

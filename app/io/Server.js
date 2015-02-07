@@ -17,48 +17,48 @@ var TimeController = require('../controllers/TimeController');
 var _players;
 var _socketServer;
 
-var _receiveMessage = function receiveMessage(messageDTO, socket) {
+// var _receiveMessage = function receiveMessage(messageDTO, socket) {
 
-  var json = JSON.parse(messageDTO);
-  var type = json.type;
-  var data = json.data;
+//   var json = JSON.parse(messageDTO);
+//   var type = json.type;
+//   var data = json.data;
 
-  logger.debug('Received event type: ', type);
+//   logger.debug('Received event type: ', type);
 
-  switch (type) {
+//   switch (type) {
 
-    case MessageType.MOVE:
+//     case MessageType.MOVE:
 
-      PlayerController.addActivePlayer(data, socket);
+//       PlayerController.addActivePlayer(data, socket);
 
-      Message.send(socket, MessageType.MOVE_COMPLETE);
+//       Message.send(socket, MessageType.MOVE_COMPLETE);
 
-      break;
+//       break;
 
-    case MessageType.LOGIN:
+//     case MessageType.LOGIN:
 
-      DatabaseController.addPlayer(data, function onAddPlayer(databaseDTO) {
+//       DatabaseController.addPlayer(data, function onAddPlayer(databaseDTO) {
 
-        // console.debug('databaseDTO', databaseDTO);
+//         // console.debug('databaseDTO', databaseDTO);
 
-        var dto = PlayerController.createLoginDTO(databaseDTO.name, databaseDTO._id);
+//         var dto = PlayerController.createLoginDTO(databaseDTO.name, databaseDTO._id);
 
-        Message.send(socket, MessageType.LOGIN_COMPLETE, dto);
-      });
+//         Message.send(socket, MessageType.LOGIN_COMPLETE, dto);
+//       });
 
-      break;
+//       break;
 
-    default:
+//     default:
 
-      logger.error('Event type unknown: ', type);
-  }
-};
+//       logger.error('Event type unknown: ', type);
+//   }
+// };
 
 var _onTic = function(data) {
 
   _.each(_socketServer.clients, function onIterateSockets(socket) {
 
-    Message.send(socket, MessageType.TIC, data);
+    // Message.send(socket, MessageType.TIC, data);
   });
 };
 
@@ -74,7 +74,7 @@ var _onBzz = function() {
 
         if (playerDTO.socket) { // Not a dummy move
 
-          Message.send(playerDTO.socket, MessageType.BZZ, playerDTO.moveDTO);
+          // Message.send(playerDTO.socket, MessageType.BZZ, playerDTO.moveDTO);
         }
       });
     });
@@ -84,21 +84,30 @@ var _onBzz = function() {
   }
 };
 
-var _addPlayerClientSocket = function addPlayerClientSocket(socket) {
+var ServerAPI = {
 
-  ConnectionController.add();
+  move: function(data) {
 
-  socket.on(EventType.MESSAGE, function message(messageDTO) {
+    logger.info('move', data);
 
-    _receiveMessage(messageDTO, socket);
-  });
-};
+    var connection = ConnectionController.getConnectionById(data.connectionId);
 
-var _removePlayerClientSocket = function _removePlayerClientSocket(socket) {
+    PlayerController.addActivePlayer(data, connection.socket);
 
-  ConnectionController.remove();
+    return true;
+  },
 
-  socket.removeAllListeners();
+  login: function(data) {
+
+    logger.info('login', data);
+
+    DatabaseController.addPlayer(data, function onAddPlayer(databaseDTO) {
+
+      var data = PlayerController.createLoginDTO(databaseDTO.name, databaseDTO._id);
+
+      return data;
+    });
+  }
 };
 
 var Server = {
@@ -107,30 +116,34 @@ var Server = {
 
     _socketServer = socketServer;
 
-    socketServer.on(EventType.CONNECT, function connection(socket) {
+    TimeController.init(
 
-      logger.info(EventType.CONNECT);
-
-      _addPlayerClientSocket(socket);
-
-      socket.on(EventType.DISCONNECT, function close() {
-
-        logger.info(EventType.DISCONNECT);
-
-        _removePlayerClientSocket(socket);
-      });
-    });
-
-    TimeController.init(_onTic, _onBzz);
+      _onTic,
+      _onBzz
+    );
 
     ConnectionController.init(
 
-      function onConnectionAdded(connections) {
+      socketServer,
+
+      ServerAPI,
+
+      function onConnectionAdded(socket) {
+
+        logger.info('onConnectionAdded');
+      },
+
+      function onConnectionRemoved(socket) {
+
+        logger.info('onConnectionRemoved');
+      },
+
+      function onConnectionsActive(connections) {
 
         TimeController.start();
       },
 
-      function onConnectionRemoved(connections) {
+      function onConnectionsInactive(connections) {
 
         TimeController.stop();
       }

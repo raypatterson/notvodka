@@ -7,6 +7,7 @@ module.exports = {
     MESSAGE: 'message',
   },
   MessageType: {
+    ID: 'id',
     TIC: 'tic',
     BZZ: 'bzz',
     MOVE: 'move',

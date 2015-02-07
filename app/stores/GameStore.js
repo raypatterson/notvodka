@@ -53,41 +53,83 @@ var GameStore = Reflux.createStore({
 
     logger.debug('onPlayerMove');
 
-    var dto = PlayerController.createMoveDTO(id, _state.player._id);
+    var data = PlayerController.createMoveDTO(id, _state.player._id);
 
-    Client.send(MessageType.MOVE, dto);
+    Client.send(
+
+      MessageType.MOVE,
+
+      data,
+
+      function onFulfilled() {
+
+        logger.debug('onPlayerMove onFulfilled');
+
+        _state.isGamePlayed = true;
+
+        _self.trigger(_state);
+      },
+
+      function onRejected(reason) {
+
+        logger.error('onPlayerMove onRejected', reason);
+      }
+    );
   },
 
-  onPlayerMoveComplete: function() {
+  // onPlayerMoveComplete: function() {
 
-    logger.debug('onPlayerMoveComplete');
+  //   logger.debug('onPlayerMoveComplete');
 
-    _state.isGamePlayed = true;
+  //   _state.isGamePlayed = true;
 
-    _self.trigger(_state);
-  },
+  //   _self.trigger(_state);
+  // },
 
   onPlayerLogin: function(playerName) {
 
     logger.debug('onPlayerLogin', playerName);
 
-    var dto = PlayerController.createLoginDTO(playerName, _state.player._id);
+    var data = PlayerController.createLoginDTO(playerName, _state.player._id);
 
-    Client.send(MessageType.LOGIN, dto);
+    // Client.send(MessageType.LOGIN, dto);
+
+    Client.send(
+
+      MessageType.LOGIN,
+
+      data,
+
+      function onFulfilled(login) {
+
+        logger.debug('onPlayerLogin onFulfilled', login);
+
+        _state.login = login;
+
+        _self.trigger(_state);
+
+        _navigate(RouteType.GAME_PODIUM);
+      },
+
+      function onRejected(reason) {
+
+        logger.error('onPlayerLogin onRejected', reason);
+      }
+    );
   },
 
-  onPlayerLoginComplete: function(loginDTO) {
+  // onPlayerLoginComplete: function(loginDTO) {
 
-    logger.debug('onPlayerLoginComplete');
+  //   logger.debug('onPlayerLoginComplete');
 
-    console.log('loginDTO', loginDTO);
+  //   console.log('loginDTO', loginDTO);
 
-    _state.login = loginDTO;
+  //   _state.login = loginDTO;
 
-    _self.trigger(_state);
+  //   _self.trigger(_state);
 
-    _navigate(RouteType.GAME_PODIUM);
-  },
+  //   _navigate(RouteType.GAME_PODIUM);
+  // },
 
   onScoreResults: function(score) {
 

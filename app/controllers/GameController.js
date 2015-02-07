@@ -2,8 +2,6 @@
 
 var logger = require('../utils/logger')('GameController');
 
-var _ = require('lodash');
-
 var MoveController = require('./MoveController');
 var PlayerController = require('./PlayerController');
 
