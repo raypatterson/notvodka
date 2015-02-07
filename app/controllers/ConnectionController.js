@@ -2,6 +2,8 @@
 
 var logger = require('../utils/logger')('ConnectionController');
 
+var _ = require('lodash');
+
 var Remote = require('q-connection');
 
 var MessageType = require('../io/Enum').MessageType;
@@ -16,7 +18,7 @@ var _createConnection = function createConnection(socket, api) {
 
   var port = {
     postMessage: function(message) {
-      logger.info('Post Message', message);
+      // logger.debug('Post Message', message);
       socket.send(message);
     },
     onmessage: null // gets filled in by Q-Connection
@@ -82,9 +84,9 @@ var ConnectionController = {
   },
 
   getConnectionById: function getConnections(id) {
-    return _connections.filter(function(connection) {
+    return _.find(_connections, function(connection) {
       return connection.id === id;
-    })[0];
+    });
   },
 
   getAllConnections: function getConnections() {

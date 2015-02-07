@@ -30,7 +30,7 @@ var GameStore = Reflux.createStore({
 
   setInitialState: function(state) {
 
-    logger.debug('setInitialState', state);
+    // logger.debug('setInitialState', state);
 
     _self = this;
 
@@ -42,20 +42,20 @@ var GameStore = Reflux.createStore({
     return _state;
   },
 
-  onGameTic: function(time) {
+  onGameTic: function(data) {
 
-    logger.debug('onGameTic', time);
+    // logger.debug('onGameTic', data);
 
-    _state.time = time;
-
+    // TODO: Make a different store for the game tic so it isn't trying to update DOM state on server
     if (_self) {
+      _state.time = data.time;
       _self.trigger(_state)
     };
   },
 
   onPlayerMove: function(id) {
 
-    logger.debug('onPlayerMove');
+    // logger.debug('onPlayerMove');
 
     var data = PlayerController.createMoveDTO(id, _state.player._id);
 
@@ -67,7 +67,7 @@ var GameStore = Reflux.createStore({
 
       function onFulfilled() {
 
-        logger.debug('onPlayerMove onFulfilled');
+        // logger.debug('onPlayerMove onFulfilled');
 
         _state.isGamePlayed = true;
 
@@ -81,14 +81,34 @@ var GameStore = Reflux.createStore({
     );
   },
 
-  // onPlayerMoveComplete: function() {
+  onScoreResults: function(score) {
 
-  //   logger.debug('onPlayerMoveComplete');
+    logger.debug('onScoreResults', score);
 
-  //   _state.isGamePlayed = true;
+    _state.results = {
+      move: MoveController.getMoveById(score.move._id),
+      answer: MoveController.getMoveById(score.answer._id),
+      isGameWonByGuessing: (score.move._id === score.answer._id)
+    };
 
-  //   _self.trigger(_state);
-  // },
+    _state.isGameComplete = true;
+
+    _self.trigger(_state);
+
+    _navigate(RouteType.GAME_PODIUM);
+  },
+
+  onPlayAgain: function() {
+
+    logger.debug('onPlayAgain');
+
+    _state.isGamePlayed = false;
+    _state.isGameComplete = false;
+
+    _self.trigger(_state);
+
+    _navigate(RouteType.GAME_FIELD);
+  },
 
   onPlayerLogin: function(playerName) {
 
@@ -120,7 +140,7 @@ var GameStore = Reflux.createStore({
         logger.error('onPlayerLogin onRejected', reason);
       }
     );
-  },
+  }
 
   // onPlayerLoginComplete: function(loginDTO) {
 
@@ -134,35 +154,6 @@ var GameStore = Reflux.createStore({
 
   //   _navigate(RouteType.GAME_PODIUM);
   // },
-
-  onScoreResults: function(score) {
-
-    logger.debug('onScoreResults');
-
-    _state.results = {
-      move: MoveController.getMoveById(score.move._id),
-      answer: MoveController.getMoveById(score.answer._id),
-      isGameWonByGuessing: (score.move._id === score.answer._id)
-    };
-
-    _state.isGameComplete = true;
-
-    _self.trigger(_state);
-
-    _navigate(RouteType.GAME_PODIUM);
-  },
-
-  onPlayAgain: function() {
-
-    logger.debug('onPlayAgain');
-
-    _state.isGamePlayed = false;
-    _state.isGameComplete = false;
-
-    _self.trigger(_state);
-
-    _navigate(RouteType.GAME_FIELD);
-  }
 });
 
 module.exports = GameStore;

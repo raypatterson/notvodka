@@ -14,64 +14,51 @@ var GameActions = require('../actions/GameActions');
 
 var _connectionId;
 
-var _handleMessage = multimethod()
+var _getData = function(input) {
+  return input.data;
+}
+
+var _getType = function(input) {
+  return input.type;
+}
+
+var _multimethod = multimethod()
   .dispatch(function(input) {
 
-    logger.debug('input', input);
-
-    return input.args ? input.args[0].type : null;
+    return _getType(input) || null;
   })
   .when(MessageType.TIC, function(input) {
 
-    var time = input.args[0].data.time;
+    // logger.debug('TIC', MessageType.TIC);
 
-    logger.debug('Tic', time);
+    // FIXME: For some reason this doesn't work if the prop isn't accessed before passing
+    var data = _getData(input);
+    // Ideally we could just pass...
+    GameActions.gameTic(data);
 
-    GameActions.gameTic(time);
+    return true;
+  })
+  .when(MessageType.BZZ, function(input) {
+
+    // logger.debug('BZZ', MessageType.BZZ);
+
+    var data = _getData(input);
+
+    GameActions.scoreResults(data);
 
     return true;
   });
 
-// var _handleMessage = function receiveMessage(messageDTO) {
+var _handleMessage = function handleMessage(data) {
 
-//   var json = JSON.parse(messageDTO);
-//   var type = json.type;
-//   var data = json.data;
+  // JSON --> POJO
+  var data = JSON.parse(data);
 
-//   // logger.debug('Received event type: ', type);
-
-//   switch (type) {
-
-//     case MessageType.TIC:
-
-//       GameActions.gameTic(data.time);
-
-//       break;
-
-//     case MessageType.BZZ:
-
-//       GameActions.scoreResults(data);
-
-//       break;
-
-//     case MessageType.MOVE_COMPLETE:
-
-//       GameActions.playerMoveComplete(data);
-
-//       break;
-
-//     case MessageType.LOGIN_COMPLETE:
-
-//       GameActions.playerLoginComplete(data);
-
-//       break;
-
-//     default:
-
-//       logger.error('Event type unknown: ', type);
-//       logger.error('Data: ', messageDTO);
-//   }
-// };
+  // Check for noise messages
+  if (data.args) {
+    _multimethod(data.args[0])
+  };
+};
 
 var Connection = require("q-connection");
 
@@ -84,16 +71,16 @@ socket.on(EventType.OPEN, function open() {
   ServerAPI
     .get('connectionId')
     .then(function(connectionId) {
-      // Need to include in direct calls to server API
-      // TODO: Figure out if there is a simpleer way to map client reusets to specific server handlers
+      // Need to include this ID in direct calls to server API
+      // TODO: Figure out if there is a simple way to map client results to specific server handlers
       _connectionId = connectionId;
     });
 
   socket.on(EventType.MESSAGE, function message(data) {
 
-    logger.debug(EventType.MESSAGE, data);
+    // logger.debug(EventType.MESSAGE, data);
 
-    _handleMessage(JSON.parse(data));
+    _handleMessage(data);
   });
 });
 

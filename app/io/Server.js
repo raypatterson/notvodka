@@ -15,91 +15,31 @@ var GameController = require('../controllers/GameController');
 var TimeController = require('../controllers/TimeController');
 
 var _players;
-var _socketServer;
 
-// var _receiveMessage = function receiveMessage(messageDTO, socket) {
+var _sendToRemote = function sendToRemote(connection, type, data) {
 
-//   var json = JSON.parse(messageDTO);
-//   var type = json.type;
-//   var data = json.data;
-
-//   logger.debug('Received event type: ', type);
-
-//   switch (type) {
-
-//     case MessageType.MOVE:
-
-//       PlayerController.addActivePlayer(data, socket);
-
-//       Message.send(socket, MessageType.MOVE_COMPLETE);
-
-//       break;
-
-//     case MessageType.LOGIN:
-
-//       DatabaseController.addPlayer(data, function onAddPlayer(databaseDTO) {
-
-//         // console.debug('databaseDTO', databaseDTO);
-
-//         var dto = PlayerController.createLoginDTO(databaseDTO.name, databaseDTO._id);
-
-//         Message.send(socket, MessageType.LOGIN_COMPLETE, dto);
-//       });
-
-//       break;
-
-//     default:
-
-//       logger.error('Event type unknown: ', type);
-//   }
-// };
-
-var _onTic = function(data) {
-
-  _.each(_socketServer.clients, function onIterateSockets(socket) {
-
-    // Message.send(socket, MessageType.TIC, data);
+  connection.remote.send({
+    type: type,
+    data: data
   });
-};
-
-var _onBzz = function() {
-
-  _players = PlayerController.getActivePlayers();
-
-  if (_players.length > 0) {
-
-    _.each(GameController.getGames(_players), function onIterateGames(game) {
-
-      _.each(game.players, function onIteratePlayers(playerDTO) {
-
-        if (playerDTO.socket) { // Not a dummy move
-
-          // Message.send(playerDTO.socket, MessageType.BZZ, playerDTO.moveDTO);
-        }
-      });
-    });
-
-    // Clear
-    PlayerController.clearActivePlayers();
-  }
 };
 
 var ServerAPI = {
 
   move: function(data) {
 
-    logger.info('move', data);
+    // logger.debug('move data', data);
 
     var connection = ConnectionController.getConnectionById(data.connectionId);
 
-    PlayerController.addActivePlayer(data, connection.socket);
+    PlayerController.addActivePlayer(data, connection);
 
     return true;
   },
 
   login: function(data) {
 
-    logger.info('login', data);
+    logger.debug('login', data);
 
     DatabaseController.addPlayer(data, function onAddPlayer(databaseDTO) {
 
@@ -114,21 +54,37 @@ var Server = {
 
   init: function(socketServer) {
 
-    _socketServer = socketServer;
-
     TimeController.init(
 
       function onTic(data) {
 
         ConnectionController.getAllConnections().map(function(connection) {
-          connection.remote.send({
-            type: MessageType.TIC,
-            data: data
-          });
+
+          _sendToRemote(connection, MessageType.TIC, data);
         });
       },
 
-      _onBzz
+      function onBzz() {
+
+        _players = PlayerController.getActivePlayers();
+
+        if (_players.length > 0) {
+
+          _.each(GameController.getGames(_players), function onIterateGames(game) {
+
+            _.each(game.players, function onIteratePlayers(player) {
+
+              if (player.connection) { // Not a dummy move
+
+                _sendToRemote(player.connection, MessageType.BZZ, player.moveDTO);
+              }
+            });
+          });
+
+          // Clear
+          PlayerController.clearActivePlayers();
+        }
+      }
     );
 
     ConnectionController.init(
@@ -139,12 +95,12 @@ var Server = {
 
       function onConnectionAdded(socket) {
 
-        logger.info('onConnectionAdded');
+        // logger.debug('onConnectionAdded');
       },
 
       function onConnectionRemoved(socket) {
 
-        logger.info('onConnectionRemoved');
+        // logger.debug('onConnectionRemoved');
       },
 
       function onConnectionsActive(connections) {
