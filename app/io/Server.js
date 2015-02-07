@@ -19,8 +19,6 @@ var Server = {
 
   init: function(socketServer) {
 
-    // Timer Controller
-
     TimeController.init(
 
       function onTic(data) {
@@ -33,67 +31,26 @@ var Server = {
 
       function onBzz() {
 
-        var players = PlayerController.getActivePlayers();
+        GameController.getGames(PlayerController.getActivePlayers()).map(function onIterateGames(game) {
 
-        if (players.length > 0) {
+          game.players.map(function onIteratePlayers(player) {
 
-          GameController.getGames(players).map(function onIterateGames(game) {
+            if (player.connection) { // Not a dummy move
 
-            game.players.map(function onIteratePlayers(player) {
-
-              if (player.connection) { // Not a dummy move
-
-                Message.send(player.connection, MessageType.BZZ, player.moveDTO);
-              }
-            });
+              Message.send(player.connection, MessageType.BZZ, player.moveDTO);
+            }
           });
+        });
 
-          // Clear
-          PlayerController.clearActivePlayers();
-        }
+        PlayerController.clearActivePlayers();
       }
-
-      // function onBzz() {
-
-      //   var players = PlayerController.getActivePlayers();
-
-      //   if (players.length > 0) {
-
-      //     _.each(GameController.getGames(players), function onIterateGames(game) {
-
-      //       _.each(game.players, function onIteratePlayers(player) {
-
-      //         if (player.connection) { // Not a dummy move
-
-      //           Message.send(player.connection, MessageType.BZZ, player.moveDTO);
-      //         }
-      //       });
-      //     });
-
-      //     // Clear
-      //     PlayerController.clearActivePlayers();
-      //   }
-      // }
     );
-
-    // Connection Controller
 
     ConnectionController.init(
 
       socketServer,
 
-      // Has methods the clients can access
-      ServerApi,
-
-      function onConnectionAdded(connection) {
-
-        // logger.debug('onConnectionAdded:', connection);
-      },
-
-      function onConnectionRemoved(connection) {
-
-        // logger.debug('onConnectionRemoved:', connection);
-      },
+      ServerApi, // Has methods the clients can access
 
       function onConnectionsActive(connections) {
 

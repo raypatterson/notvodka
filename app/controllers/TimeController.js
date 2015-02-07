@@ -56,14 +56,14 @@ var TimeController = {
 
   start: function() {
 
-    logger.info('Starting tic');
+    logger.debug('Starting tic');
 
     _start(0);
   },
 
   stop: function() {
 
-    logger.info('Stopping tic');
+    logger.debug('Stopping tic');
 
     _stop();
   }

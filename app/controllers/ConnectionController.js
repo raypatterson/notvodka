@@ -44,38 +44,51 @@ var _createConnection = function createConnection(socket, api) {
   return connection;
 };
 
+var _callback = function callback(cb, argsArray) {
+  if (cb && typeof(cb) === 'function') {
+    cb.apply(null, argsArray);
+  }
+};
+
 var ConnectionController = {
 
-  init: function(server, api, onConnectionAdded, onConnectionRemoved, onConnectionsActive, onConnectionsInactive) {
+  init: function(
+    server,
+    api,
+    onConnectionsActive,
+    onConnectionsInactive,
+    onConnectionAdded,
+    onConnectionRemoved
+  ) {
 
     server.on(EventType.CONNECT, function connection(socket) {
 
-      logger.info(EventType.CONNECT);
+      // logger.debug(EventType.CONNECT);
 
       var connection = _createConnection(socket, api);
 
       if (_connections.length === NUM_SERVER_CONNECTIONS) {
 
-        onConnectionsActive(_connections);
+        _callback(onConnectionsActive, _connections);
       }
 
       _connections.push(connection);
 
       logger.debug(_connections.length + ' connections');
 
-      onConnectionAdded(connection);
+      _callback(onConnectionAdded, connection);
 
       socket.on(EventType.DISCONNECT, function close() {
 
-        logger.info(EventType.DISCONNECT);
+        // logger.debug(EventType.DISCONNECT);
 
         connection = _connections.splice(_connections.indexOf(connection), 1)[0];
 
-        onConnectionRemoved(connection);
+        _callback(onConnectionRemoved, connection);
 
         if (_connections.length === NUM_SERVER_CONNECTIONS) {
 
-          onConnectionsInactive(_connections);
+          _callback(onConnectionsInactive, _connections);
         }
 
         logger.debug(_connections.length + ' connections');
@@ -83,13 +96,13 @@ var ConnectionController = {
     });
   },
 
-  getConnectionById: function getConnections(id) {
-    return _.find(_connections, function(connection) {
+  getConnectionById: function getConnectionById(id) {
+    return _connections.filter(function(connection) {
       return connection.id === id;
-    });
+    })[0];
   },
 
-  getAllConnections: function getConnections() {
+  getAllConnections: function getAllConnections() {
     return _connections.slice(0);
   }
 };
