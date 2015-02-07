@@ -28,7 +28,13 @@ var Server = {
 
       function onTic(data) {
 
-        ConnectionController.getAllConnections().map(function(connection) {
+        var connections = ConnectionController.getAllConnections();
+
+        // logger.debug('onTic', connections);
+
+        connections.map(function(connection) {
+
+          // logger.debug('onTic', connection);
 
           Message.send(connection, MessageType.TIC, data);
         });
