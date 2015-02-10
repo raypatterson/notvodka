@@ -73,6 +73,12 @@ gulp.task('webpack', function() {
       }, {
         test: /\.scss$/,
         loader: 'style!css!sass?outputStyle=expanded&includePaths[]=' + (path.resolve(__dirname, './public'))
+      }, {
+        test: /\.woff[0-9]?$/,
+        loader: "url-loader?limit=10000&minetype=application/font-woff"
+      }, {
+        test: /\.(ttf|eot|svg)$/,
+        loader: "file-loader"
       }]
     },
     postcss: {

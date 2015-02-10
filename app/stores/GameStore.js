@@ -1,7 +1,5 @@
 'use strict';
 
-var logger = require('../utils/logger')('GameStore');
-
 var Reflux = require('reflux');
 
 var RouteType = require('../routes/Enum').RouteType;
@@ -30,8 +28,6 @@ var GameStore = Reflux.createStore({
 
   setInitialState: function(state) {
 
-    // logger.debug('setInitialState', state);
-
     _self = this;
 
     _state = state;
@@ -55,7 +51,7 @@ var GameStore = Reflux.createStore({
 
   onPlayerMove: function(id) {
 
-    // logger.debug('onPlayerMove');
+    logger.debug('onPlayerMove');
 
     var data = PlayerController.createMoveDTO(id, _state.player._id);
 
@@ -67,7 +63,7 @@ var GameStore = Reflux.createStore({
 
       function onFulfilled() {
 
-        // logger.debug('onPlayerMove onFulfilled');
+        logger.debug('onPlayerMove onFulfilled');
 
         _state.isGamePlayed = true;
 
@@ -83,7 +79,7 @@ var GameStore = Reflux.createStore({
 
   onScoreResults: function(score) {
 
-    // logger.debug('onScoreResults', score);
+    logger.debug('onScoreResults', score);
 
     _state.results = {
       move: MoveController.getMoveById(score.move._id),
@@ -141,19 +137,10 @@ var GameStore = Reflux.createStore({
       }
     );
   }
-
-  // onPlayerLoginComplete: function(loginDTO) {
-
-  //   logger.debug('onPlayerLoginComplete');
-
-  //   console.log('loginDTO', loginDTO);
-
-  //   _state.login = loginDTO;
-
-  //   _self.trigger(_state);
-
-  //   _navigate(RouteType.GAME_PODIUM);
-  // },
 });
+
+var logger = require('../utils/logger')('GameStore');
+
+logger.attach(GameStore);
 
 module.exports = GameStore;

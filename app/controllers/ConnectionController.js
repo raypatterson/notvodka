@@ -1,9 +1,5 @@
 'use strict';
 
-var logger = require('../utils/logger')('ConnectionController');
-
-var _ = require('lodash');
-
 var Remote = require('q-connection');
 
 var MessageType = require('../io/Enum').MessageType;
@@ -97,14 +93,20 @@ var ConnectionController = {
   },
 
   getConnectionById: function getConnectionById(id) {
+
     return _connections.filter(function(connection) {
       return connection.id === id;
     })[0];
   },
 
   getAllConnections: function getAllConnections() {
+
     return _connections.slice(0);
   }
 };
+
+var logger = require('../utils/logger')('ConnectionController');
+
+// logger.attach(ConnectionController);
 
 module.exports = ConnectionController;

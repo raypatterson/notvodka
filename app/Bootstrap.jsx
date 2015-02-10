@@ -12,6 +12,10 @@ var App = require('./App.jsx');
 
 if (typeof window !== 'undefined') {
 
+  // Add Bootstrap
+  window.jQuery = window.$ = require('jquery');
+  require('bootstrap-sass/assets/javascripts/bootstrap');
+  require('bootstrap-sass/assets/stylesheets/_bootstrap.scss');
   // Add styles
   require('./sass/styles.scss');
 
