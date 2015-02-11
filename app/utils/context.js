@@ -14,11 +14,6 @@ var port =
   // Is development server
   cfg.port || 5000;
 
-console.log('>>>>> process.env.NODE_ENV', process.env.NODE_ENV);
-console.log('>>>>> process.env.PORT', process.env.PORT);
-console.log('>>>>> port', port);
-console.log('>>>>> isDevelopment', isDevelopment);
-
 var hostname = ctx.protocol + '//' + ctx.hostname + ':' + port;
 
 module.exports = {
