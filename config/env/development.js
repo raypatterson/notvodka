@@ -1,5 +1,5 @@
 module.exports = {
   debug: true,
-  protocol: 'http',
+  protocol: 'http:',
   hostname: 'localhost'
 };

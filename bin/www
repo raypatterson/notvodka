@@ -3,12 +3,15 @@
 var appRoot = require('app-root-path');
 
 var logger = require('../app/utils/logger')('www');
+var context = require('../app/utils/context');
 
 var cfg = require('../config');
 
 var app = require('../app');
 
-app.set('port', process.env.PORT || cfg.port || 5000);
+logger.debug('context.port', context.port);
+
+app.set('port', context.port);
 
 var appServer = app.listen(app.get('port'), function() {
   logger.info('Express appServer listening on port ' + appServer.address().port);

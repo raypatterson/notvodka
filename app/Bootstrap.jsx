@@ -5,12 +5,13 @@
 'use strict';
 
 var logger = require('./utils/logger')('Bootstrap');
+var context = require('./utils/context');
 
 var React = require('react');
 
 var App = require('./App.jsx');
 
-if (typeof window !== 'undefined') {
+if (context.isClient) {
 
   // Add Bootstrap
   window.jQuery = window.$ = require('jquery');

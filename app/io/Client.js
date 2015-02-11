@@ -1,20 +1,20 @@
 'use strict';
 
-var logger = require('../utils/logger')('Client');
-
 var multimethod = require('multimethod');
+
+var logger = require('../utils/logger')('Client');
+var context = require('../utils/context');
+
+logger.debug('context.hostname', context.hostname);
+
+var socket = require('engine.io-client')(context.hostname);
+var ServerAPI = require('q-connection')(socket);
+
+var GameActions = require('../actions/GameActions');
 
 var EventType = require('./Enum').EventType;
 var MessageType = require('./Enum').MessageType;
 var Message = require('./Message');
-
-var socket = require('engine.io-client')('http://localhost:8000');
-
-var Connection = require("q-connection");
-
-var ServerAPI = Connection(socket);
-
-var GameActions = require('../actions/GameActions');
 
 var _connectionId;
 
