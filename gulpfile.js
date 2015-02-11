@@ -9,16 +9,18 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer-core');
 var runSequence = require('run-sequence');
 
+var isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined || true;
+
 var $ = require('gulp-load-plugins')({
   camelize: true
 });
 
 gulp.task('default', function() {
-  runSequence('clean', 'nodemon', 'webpack', 'livereload', 'open');
-});
-
-gulp.task('build', function() {
-  runSequence('webpack', 'reload');
+  if (isDevelopment) {
+    runSequence('clean', 'nodemon', 'webpack', 'livereload', 'open');
+  } else {
+    runSequence('nodemon', 'webpack');
+  };
 });
 
 gulp.task('livereload', function() {
@@ -47,11 +49,12 @@ gulp.task('nodemon', function() {
       ignore: ['public/**', 'node_modules/']
     })
     .on('start', function() {
-
       if (isStarted === false) {
         isStarted = true;
       } else {
-        runSequence('build');
+        if (isDevelopment) {
+          runSequence('webpack', 'reload');
+        }
       }
     });
 });
@@ -90,9 +93,6 @@ gulp.task('webpack', function() {
     plugins: [
       new webpack.DefinePlugin({
         'CONFIG': JSON.stringify(cfg)
-      }),
-      new webpack.ProvidePlugin({
-        Primus: 'primus'
       })
     ]
   };
