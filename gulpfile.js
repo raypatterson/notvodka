@@ -9,6 +9,8 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer-core');
 var runSequence = require('run-sequence');
 
+var isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined || true;
+
 var $ = require('gulp-load-plugins')({
   camelize: true
 });
@@ -34,7 +36,11 @@ gulp.task('open', function() {
 });
 
 gulp.task('clean', function(cb) {
-  del(['public/js'], cb);
+  if (isDevelopment) {
+    del(['public/js'], cb);
+  } else {
+    cb();
+  };
 });
 
 gulp.task('nodemon', function() {
