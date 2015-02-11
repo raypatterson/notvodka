@@ -5,8 +5,6 @@ var multimethod = require('multimethod');
 var logger = require('../utils/logger')('Client');
 var context = require('../utils/context');
 
-logger.debug('context.hostname', context.hostname);
-
 var socket = require('engine.io-client')(context.hostname);
 var ServerAPI = require('q-connection')(socket);
 
