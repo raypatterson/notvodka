@@ -1,5 +1,5 @@
 var pkg = require('./package');
-var cfg = require('./gulpfile.config');
+var cfg = require('./config');
 var fs = require('fs-extra');
 var del = require('del');
 var path = require('path');
@@ -9,18 +9,18 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer-core');
 var runSequence = require('run-sequence');
 
-var isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined || true;
-
 var $ = require('gulp-load-plugins')({
   camelize: true
 });
 
+var isDevelopment = process.env.NODE_ENV === cfg.env_type.DEVELOPMENT || process.env.NODE_ENV === undefined || true;
+
 gulp.task('default', function() {
-  if (isDevelopment) {
-    runSequence('clean', 'nodemon', 'webpack', 'livereload', 'open');
-  } else {
-    runSequence('nodemon', 'webpack');
-  };
+  runSequence('clean', 'nodemon', 'webpack', 'livereload', 'open');
+});
+
+gulp.task('build', function() {
+  runSequence('webpack', 'nodemon');
 });
 
 gulp.task('livereload', function() {
@@ -32,7 +32,7 @@ gulp.task('reload', function() {
 });
 
 gulp.task('open', function() {
-  open('http://localhost:8000', 'google chrome');
+  open(cfg.protocol + '://' + cfg.hostname + ':' + cfg.port, 'google chrome');
 });
 
 gulp.task('clean', function(cb) {
@@ -92,7 +92,7 @@ gulp.task('webpack', function() {
     },
     plugins: [
       new webpack.DefinePlugin({
-        'CONFIG': JSON.stringify(cfg)
+        CONFIG: JSON.stringify(cfg)
       })
     ]
   };
