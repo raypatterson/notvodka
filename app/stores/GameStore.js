@@ -141,6 +141,8 @@ var GameStore = Reflux.createStore({
 
 var logger = require('../utils/logger')('GameStore');
 
-// logger.attach(GameStore);
+logger.attach(GameStore);
+
+logger.debug('Testing', GameStore);
 
 module.exports = GameStore;

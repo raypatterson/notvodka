@@ -8,6 +8,8 @@ var ServerAPI = {
 
   move: function(data) {
 
+    logger.debug('move', data);
+
     var connection = ConnectionController.getConnectionById(data.connectionId);
 
     PlayerController.addActivePlayer(data, connection);
@@ -27,5 +29,9 @@ var ServerAPI = {
     });
   }
 };
+
+var logger = require('../utils/logger')('ServerAPI');
+
+logger.attach(ServerAPI);
 
 module.exports = ServerAPI;

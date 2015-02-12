@@ -7,8 +7,14 @@
 //   return Logger.get(prefix);
 // };
 
-var Logger = require('logr.js');
+var context = require('../utils/context');
+
+var Logr = require('logr.js');
+
+if (context.isClient) {
+  window.Logr = Logr;
+}
 
 module.exports = function(prefix) {
-  return Logger.log(prefix);
+  return Logr.log(prefix);
 };
