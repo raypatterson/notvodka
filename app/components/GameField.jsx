@@ -56,11 +56,16 @@ var GameField = React.createClass({
       };
 
       var progressMessage = function(state) {
+
+
         if (state.time) {
+
+          var seconds = state.time.seconds;
+
           if (state.isGamePlayed) {
-            return <p>Your game will end in {state.time.seconds} seconds</p>;
+            return <p>Your game will end in {seconds} seconds</p>;
           } else {
-            return <p>A new game will begin in {state.time.seconds} seconds</p>;
+            return <p>A new game will begin in {seconds} seconds</p>;
           }
         } else {
           return null;
