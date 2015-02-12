@@ -53,18 +53,19 @@ var GameStore = Reflux.createStore({
 
     logger.debug('onPlayerMove');
 
-    var data = PlayerController.createMoveDTO(id, _state.player._id);
+    var moveDTO = PlayerController.createMoveDTO(id, _state.player._id);
 
     Client.send(
 
       MessageType.MOVE,
 
-      data,
+      moveDTO,
 
       function onFulfilled() {
 
         logger.debug('onPlayerMove onFulfilled');
 
+        _state.move = moveDTO.move;
         _state.isGamePlayed = true;
 
         _self.trigger(_state);

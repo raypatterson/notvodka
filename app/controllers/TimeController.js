@@ -2,8 +2,8 @@
 
 var logger = require('../utils/logger')('TimeController');
 
-var TIME_INTERVAL = 1000;
-var TIME_LIMIT = 1000 * 5;
+var TIME_INTERVAL = 16;
+var TIME_LIMIT = 1000 * 7;
 
 var _tic;
 

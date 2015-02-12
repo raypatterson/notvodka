@@ -58,6 +58,18 @@ body {
   margin-right: 10px;
 }
 
+.btn {
+  transition: background-color .25s ease-out;
+}
+
+.game-arena .game-buttons .disabled {
+  background-color: #e6e6e6;
+}
+
+.game-arena .game-buttons .selected {
+  background-color: white;
+}
+
 .game-result {
   margin: 10px 0;
 }

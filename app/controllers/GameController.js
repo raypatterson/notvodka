@@ -60,6 +60,8 @@ var GameController = {
       games.push(game);
     }
 
+    // logger.debug('games', games);
+
     return games;
   }
 };

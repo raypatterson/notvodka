@@ -4,8 +4,10 @@
 
 'use strict';
 
-var React = require('react');
+var React = require('react/addons');
 var Reflux = require('reflux');
+
+var logger = require('../utils/logger')('GameField');
 
 var GameStore = require('../stores/GameStore');
 var GameActions = require('../actions/GameActions');
@@ -29,19 +31,24 @@ var GameField = React.createClass({
 
       var self = this;
 
-      var buttonClasses = "btn btn-lg btn-default" + (self.state.isGamePlayed ? " disabled" : "");
+      var buttonClasses;
+      var sharedButtonClasses = React.addons.classSet({
+        'btn btn-lg btn-default': true,
+        'disabled': this.state.isGamePlayed
+      });
 
       var moveButtons = this.state.potentialMoves.map(function(option) {
 
-        // Add some styles maybe?
-        buttonClasses += ' ' + option.title.toLowerCase().split(' ').join('-');
+        buttonClasses = self.state.isGamePlayed ? React.addons.classSet({
+          'selected': self.state.move._id === option._id
+        }) : '';
 
         return (
           <button 
             key={option._id} 
             onClick={self.clickHandler.bind(null, option._id)} 
             type="button" 
-            className={buttonClasses}
+            className={sharedButtonClasses + ' ' + buttonClasses}
             >
             {option.title}
             </button>
