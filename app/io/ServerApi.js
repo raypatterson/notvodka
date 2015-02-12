@@ -32,6 +32,6 @@ var ServerAPI = {
 
 var logger = require('../utils/logger')('ServerAPI');
 
-logger.attach(ServerAPI);
+// logger.attach(ServerAPI);
 
 module.exports = ServerAPI;

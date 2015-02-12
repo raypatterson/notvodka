@@ -9,8 +9,6 @@ var cfg = require('../config');
 
 var app = require('../app');
 
-logger.debug('context.port', context.port);
-
 app.set('port', context.port);
 
 var appServer = app.listen(app.get('port'), function() {
