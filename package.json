@@ -37,7 +37,7 @@
     "json3": "^3.3.2",
     "jsx-loader": "^0.12.2",
     "lodash": "^3.0.0",
-    "logr.js": "^0.2.0",
+    "logr.js": "^0.2.1",
     "morgan": "~1.5.1",
     "multimethod": "^0.1.0",
     "node-jsx": "^0.12.4",
@@ -58,8 +58,5 @@
     "url-loader": "^0.5.5",
     "webpack": "^1.5.3"
   },
-  "devDependencies": {
-    "del": "^1.1.1",
-    "gulp-livereload": "^3.6.0"
-  }
+  "devDependencies": {}
 }
